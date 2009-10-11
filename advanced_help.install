@@ -20,13 +20,13 @@ function advanced_help_uninstall() {
  */
 function advanced_help_schema() {
   $schema['advanced_help_index'] = array(
-    'description' => t('Stores search index correlations for advanced help topics.'),
+    'description' => 'Stores search index correlations for advanced help topics.',
     'fields' => array(
       'sid' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t('The primary key to give to the search engine for this topic.'),
+        'description' => 'The primary key to give to the search engine for this topic.',
         'no export' => TRUE,
       ),
       'module' => array(
@@ -34,21 +34,21 @@ function advanced_help_schema() {
         'length' => '255',
         'default' => '',
         'not null' => TRUE,
-        'description' => t('The module that owns this topic.'),
+        'description' => 'The module that owns this topic.',
       ),
       'topic' => array(
         'type' => 'varchar',
         'length' => '255',
         'default' => '',
         'not null' => TRUE,
-        'description' => t('The topic id.'),
+        'description' => 'The topic id.',
       ),
       'language' => array(
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The language this search index relates to.'),
+        'description' => 'The language this search index relates to.',
       ),
     ),
     'primary key' => array('sid'),

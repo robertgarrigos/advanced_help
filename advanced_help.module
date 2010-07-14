@@ -587,7 +587,7 @@ function advanced_help_view_topic($module, $topic, $popup = FALSE) {
     // Change 'base_url:' to the URL to the site.
     $output = preg_replace('/href="base_url:([^"]+)"/', 'href="' . strtr(url('$1'), array('%24' => '$')) . '"', $output);
     $output = preg_replace('/src="base_url:([^"]+)"/', 'src="'   . strtr(url('$1'), array('%24' => '$')) . '"', $output);
-    $output = str_replace('&base_url&', $base_path, $output);
+    $output = preg_replace('/&base_url&([^"]+)"/', strtr(url('$1'), array('%24' => '$')) . '"', $output);
 
     // Run the line break filter if requested
     if (!empty($info['line break'])) {

@@ -856,6 +856,29 @@ function advanced_help_search_reset() {
 }
 
 /**
+ * Implements hook_search_status().
+ */
+function advanced_help_search_status() {
+  $topics = advanced_help_get_topics();
+  $total = 0;
+  foreach ($topics as $module => $module_topics) {
+    foreach ($module_topics as $topic => $info) {
+      $file = advanced_help_get_topic_filename($module, $topic);
+      if ($file) {
+        $total++;
+      }
+    }
+  }
+  
+  $last_cron = variable_get('advanced_help_last_cron', array('time' => 0));
+  $indexed = 0;
+  if ($last_cron['time'] != 0) {
+    $indexed = db_query("SELECT COUNT(*) FROM {search_dataset} sd WHERE sd.type = 'help' AND sd.sid IS NOT NULL AND sd.reindex = 0")->fetchField();
+  }
+  return array('remaining' => $total - $indexed, 'total' => $total);
+}
+
+/**
  * Get or create an sid (search id) that correllates to each topic for
  * the search system.
  */

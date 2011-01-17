@@ -576,8 +576,12 @@ function advanced_help_view_topic($module, $topic, $popup = FALSE) {
     $info = advanced_help_get_topic($module, $topic);
     $file = "./$file_info[path]/$file_info[file]";
 
-    // @todo is this trusted output?
     $output = file_get_contents($file);
+    if (isset($info['readme file']) && $info['readme file']) {
+      // Readme files are treated as plain text: filter accordingly.
+      $output = check_plain($output);
+    }
+
     // Make some exchanges. The strtr is because url() translates $ into %24
     // but we need to change it back for the regex replacement.
 
@@ -776,6 +780,7 @@ function _advanced_help_parse_ini() {
             'line break' => isset($topic['line break']) ? $topic['line break'] : (isset($cache['settings'][$module]['line break']) ? $cache['settings'][$module]['line break'] : FALSE),
             'navigation' => isset($topic['navigation']) ? $topic['navigation'] : (isset($cache['settings'][$module]['navigation']) ? $cache['settings'][$module]['navigation'] : TRUE),
             'css' => isset($topic['css']) ? $topic['css'] : (isset($cache['settings'][$module]['css']) ? $cache['settings'][$module]['css'] : NULL),
+            'readme file' => isset($topic['readme file']) ? $topic['readme file'] : FALSE,
           );
         }
       }

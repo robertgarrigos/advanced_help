@@ -1,5 +1,4 @@
 <?php
-// $Id$
 /**
  * @file advanced_help.install
  * Contains install and update functions for advanced_help.

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function phptemplate_advanced_help_popup($content) {
   // Add favicon.

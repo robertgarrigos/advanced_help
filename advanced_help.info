@@ -1,5 +1,3 @@
 name = Advanced help
 description = Allow advanced help and documentation.
 core = 7.x
-files[] = advanced_help.module
-files[] = advanced_help.install

@@ -1,11 +1,11 @@
 <?php
 /**
  * @file
- *
  * Provide example help for the advanced help module.
  */
+
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function help_example_menu() {
   // View help topic index.
@@ -18,6 +18,9 @@ function help_example_menu() {
   return $items;
 }
 
+/**
+ * Help topic index.
+ */
 function help_example_index_page() {
   $output = theme('advanced_help_topic', 'help_example', 'about-php');
   $output .= '&nbsp;' . t('Click the help icon to view some example help about the PHP programming language (from wikipedia.org). Be sure to run cron to update the index if you want to try out the search features.');

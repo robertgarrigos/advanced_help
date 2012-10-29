@@ -1,21 +1,27 @@
 <?php
 /**
- * @file advanced_help.install
+ * @file
  * Contains install and update functions for advanced_help.
  */
 
+/**
+ * Implements hook_install().
+ */
 function advanced_help_install() {
   drupal_set_message('Installing advanced_help.');
   drupal_install_schema('advanced_help');
 }
 
+/**
+ * Implements hook_uninstall().
+ */
 function advanced_help_uninstall() {
   drupal_uninstall_schema('advanced_help');
   variable_del('advanced_help_last_cron');
 }
 
 /**
- * advanced_help's initial schema.
+ * Implements hook_schema().
  */
 function advanced_help_schema() {
   $schema['advanced_help_index'] = array(

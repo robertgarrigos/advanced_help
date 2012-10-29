@@ -771,8 +771,7 @@ function _advanced_help_parse_ini() {
       elseif (!file_exists("$module_path/help")) {
         // Look for one or more README files.
         $files = file_scan_directory("./$module_path",
-          '/^(README|readme).*\.(txt|TXT)$/', array('.', '..', 'CVS'),
-          0, FALSE);
+          '/^(README|readme).*\.(txt|TXT)$/', array('recurse' => FALSE));
         $path = "./$module_path";
         foreach ($files as $name => $fileinfo) {
           $info[$fileinfo->filename] = array(

@@ -55,7 +55,7 @@ function advanced_help_menu() {
       'weight' => 9,
     );
   }
-  $items['advanced_help/search/%menu_tail'] = array(
+  $items['advanced_help/search/%'] = array(
     'title' => 'Search help',
     'page callback' => 'advanced_help_search_view',
     'page arguments' => array('advanced_help'),
@@ -124,6 +124,22 @@ function advanced_help_uasort($id_a, $id_b) {
   return 0;
 }
 
+/* Helper function for grabbing search keys. Function is missing in D7.
+ *
+ * http://api.drupal.org/api/function/search_get_keys/6
+ */
+function advanced_help_search_get_keys() {
+  static $return;
+  if (!isset($return)) {
+    // Extract keys as remainder of path
+    // Note: support old GET format of searches for existing links.
+    $path = explode('/', $_GET['q'], 3);
+    $keys = empty($_REQUEST['keys']) ? '' : $_REQUEST['keys'];
+    $return = count($path) == 3 ? $path[2] : $keys;
+  }
+  return $return;
+}
+
 /**
  * Page callback for advanced help search.
  */
@@ -135,14 +151,16 @@ function advanced_help_search_view() {
   $breadcrumb[] = advanced_help_l(t('Help'), 'admin/advanced_help');
 
   if (!isset($_POST['form_id'])) {
-    $keys = search_get_keys();
+    $keys = advanced_help_search_get_keys();
     // Only perform search if there is non-whitespace search term:
     $results = '';
     if (trim($keys)) {
+      $search_results = search_data($keys, 'advanced_help');
+      $search_results = drupal_render($search_results);
       // Collect the search results:
       $results = array(
         '#type' => 'markup',
-        '#markup' => search_data($keys, 'advanced_help'),
+        '#markup' => $search_results,
       );
     }
 
@@ -365,7 +383,7 @@ function advanced_help_form_system_modules_alter(&$form, &$form_state) {
  */
 function advanced_help_search_form($form, &$form_state, $keys = '') {
   module_load_include('inc', 'search', 'search.pages');
-  $form = search_form($form, $form_state, advanced_help_url('admin/advanced_help'), $keys, 'advanced_help', t('Search help'));
+  $form = search_form($form, $form_state, 'admin/advanced_help', $keys, 'advanced_help', t('Search help'));
 
   $form['basic']['inline']['submit']['#validate'] = array('search_form_validate');
   $form['basic']['inline']['submit']['#submit'] = array('advanced_help_search_form_submit');
@@ -377,7 +395,7 @@ function advanced_help_search_form($form, &$form_state, $keys = '') {
  * Process a search form submission.
  */
 function advanced_help_search_form_submit($form, &$form_state) {
-  $keys = $form_state['values']['processed_keys'];
+  $keys = empty($form_state['values']['processed_keys']) ? $form_state['values']['keys'] : $form_state['values']['processed_keys'];
   if ($keys == '') {
     form_set_error('keys', t('Please enter some keywords.'));
     return;

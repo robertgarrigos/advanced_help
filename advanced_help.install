@@ -8,7 +8,8 @@
  * Implements hook_install().
  */
 function advanced_help_install() {
-  drupal_set_message('Installing advanced_help.');
+  $t = get_t();
+  drupal_set_message($t('Installing advanced_help.'));
   drupal_install_schema('advanced_help');
 }
 

@@ -765,9 +765,11 @@ function advanced_help_search($op = 'search', $keys = NULL) {
   switch ($op) {
     case 'name':
       return t('Help');
+
     case 'reset':
       variable_del('advanced_help_last_cron');
       return;
+
     case 'search':
       $topics = advanced_help_get_topics();
       $find = do_search($keys, 'help');

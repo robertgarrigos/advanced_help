@@ -24,7 +24,7 @@
  * id. Links may be embedded as in the following example:
  *
  * @code
- * $output .= theme('advanced_help_topic', $module, $topic);
+ * $output .= theme('advanced_help_topic', array('module' => $module, 'topic' => $topic));
  * @endcode
  *
  * Link to other topics using <a href="topic:module/topic">. (Using

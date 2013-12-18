@@ -230,7 +230,7 @@ function advanced_help_index_page($module = '') {
     $result = db_query('SELECT * FROM {system}');
     foreach ($result as $info) {
       $module_info = unserialize($info->info);
-      $modules[$info->name] = $module_info['name'];
+      $modules[$info->name] = isset($module_info['name']) ? $module_info['name'] : $info->name;
     }
 
     asort($modules);

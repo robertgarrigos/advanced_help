@@ -205,7 +205,7 @@ function advanced_help_index_page($module = '') {
 
   $output = array();
   // Print a search widget.
-  $output['advanced_help_search'] = module_exists('search') ? drupal_get_form('advanced_help_search_form') : t('Enable the search module to search help.');
+  $output['advanced_help_search'] = module_exists('search') ? drupal_get_form('advanced_help_search_form') : array('#markup' => t('Enable the search module to search help.'));
 
   $breadcrumb = array();
   if ($module) {

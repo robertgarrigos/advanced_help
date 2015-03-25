@@ -695,9 +695,9 @@ function _advanced_help_parse_ini() {
         $info = parse_ini_file("./$help_path/$module/$module.help.ini", TRUE);
       }
       elseif (!file_exists("$module_path/help")) {
-        // Look for one or more README files.
+        // Look for one or more README files (old erg).
         $files = file_scan_directory("./$module_path",
-          '^(README|readme).*\.(txt|TXT)$', array('.', '..', 'CVS'),
+          '^(README|readme).*\.(txt|TXT|md|MD)$', array('.', '..', 'CVS'),
           0, FALSE);
         $path = "./$module_path";
         foreach ($files as $name => $fileinfo) {

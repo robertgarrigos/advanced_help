@@ -682,8 +682,9 @@ function _advanced_help_parse_ini() {
     $cache = array('topics' => array(), 'settings' => array());
 
     $help_path = drupal_get_path('module', 'advanced_help') . '/modules';
-    foreach (module_list() as $module) {
-      $module_path = drupal_get_path('module', $module);
+    foreach (array_merge(module_list(), list_themes()) as $plugin) {
+      $module = is_string($plugin) ? $plugin : $plugin->name;
+      $module_path = drupal_get_path(is_string($plugin) ? 'module' : 'theme', $module);
       $info = array();
       if (file_exists("$module_path/help/$module.help.ini")) {
         $path = "$module_path/help";

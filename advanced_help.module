@@ -563,7 +563,7 @@ function theme_advanced_help_topic($variables) {
       'html' => TRUE)
     );
   }
-  else {
+  elseif (user_access('view advanced help topic')) {
     return l($text, "help/$module/$topic", array(
       'attributes' => array(
         'class' => $class,
@@ -797,7 +797,7 @@ function _advanced_help_parse_ini() {
       elseif (!file_exists("$module_path/help")) {
         // Look for one or more README files.
         $files = file_scan_directory("./$module_path",
-          '/^(README|readme).*\.(txt|TXT)$/', array('recurse' => FALSE));
+          '/^(readme).*\.(txt|md)$/i', array('recurse' => FALSE));
         $path = "./$module_path";
         foreach ($files as $name => $fileinfo) {
           $info[$fileinfo->filename] = array(

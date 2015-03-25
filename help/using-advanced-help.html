@@ -4,6 +4,19 @@
   and easy framework that modules and themes may use to provide their own help.
   </p>
 
+<h2 id="access-control">Access control</h2>
+
+<p>When this module is installed, users with the
+<code>view advanced help index</code>
+permission can access the advanced help index by going to
+<em>Administer &rarr; Advanced Help</em>
+(<code>admin/advanced_help</code>). Additional permissions
+<code>view advanced help topic</code>  and
+<code>view advanced help popup</code>
+enable users to access the actual help pages and popups.</p>
+
+
+
 <p>Modules and themes utilizing <em>Advanced help</em> should create a 'help'
   subdirectory inside their own main directory. Place the file
   MODULENAME.help.ini (resp. THEMENAME.help.ini) in this subdirectory, formatted

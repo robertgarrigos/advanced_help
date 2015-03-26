@@ -2,3 +2,11 @@ name = Advanced help example
 description = A example help module to demonstrate the advanced help module.
 core = 6.x
 dependencies[] = advanced_help
+
+attributions[cc_adaption][type] = 'asset'
+attributions[cc_adaption][title] = 'About PHP, History of PHP, Usage of PHP, PHP Syntax, Security of PHP'
+attributions[cc_adaption][license_url] = 'http://creativecommons.org/licenses/by-sa/3.0/no/'
+attributions[cc_adaption][org_title] = 'PHP (Wikipedia)'
+attributions[cc_adaption][org_work_url] = 'http://en.wikipedia.org/wiki/PHP'
+attributions[cc_adaption][org_license] = 'Creative Commons BY-SA 3.0'
+attributions[cc_adaption][org_license_url] = 'http://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License'

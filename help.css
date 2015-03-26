@@ -38,7 +38,8 @@
   display: block;
   float: left; /* LTR */
   margin: 0 5%;
-  width: 4%;
+  text-align: center;
+  width: 10%;
 }
 
 .help-up-noleft {

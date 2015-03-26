@@ -22,6 +22,7 @@ function help_example_menu() {
  * Topic index callback.
  */
 function help_example_index_page() {
+  //$output = 'The icon: ';
   $output = theme('advanced_help_topic', array(
     'module' => 'help_example',
     'topic' => 'about-php',

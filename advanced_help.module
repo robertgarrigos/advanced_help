@@ -714,13 +714,13 @@ function advanced_help_view_topic($module, $topic, $popup = FALSE) {
         $navigation = '<div class="help-navigation clear-block">';
 
         if ($prev) {
-          $navigation .= advanced_help_l('<< ' . $topics[$prev[0]][$prev[1]]['title'], "help/$prev[0]/$prev[1]", array('attributes' => array('class' => 'help-left')));
+          $navigation .= advanced_help_l('«« ' . $topics[$prev[0]][$prev[1]]['title'], "help/$prev[0]/$prev[1]", array('attributes' => array('class' => 'help-left')));
         }
         if ($up) {
           $navigation .= advanced_help_l(t('Up'), $up, array('attributes' => array('class' => $prev ? 'help-up' : 'help-up-noleft')));
         }
         if ($next) {
-          $navigation .= advanced_help_l($topics[$next[0]][$next[1]]['title'] . ' >>', "help/$next[0]/$next[1]", array('attributes' => array('class' => 'help-right')));
+          $navigation .= advanced_help_l($topics[$next[0]][$next[1]]['title'] . ' »»', "help/$next[0]/$next[1]", array('attributes' => array('class' => 'help-right')));
         }
 
         $navigation .= '</div>';

@@ -22,6 +22,11 @@
   font-weight: normal;
 }
 
+.attribution {
+  font-size: 0.8em;
+  color: #aaa;
+}
+
 .help-left {
   display: block;
   float: left; /* LTR */

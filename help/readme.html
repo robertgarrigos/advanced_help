@@ -78,25 +78,6 @@ accompanied by patches are more likely to make it into a release.</p>
 <p>The maintainer hopes that the community is willing to help out by
 answering &amp; closing support requests.</p>
 
-<h2 id="access-control">Access control</h2>
-
-<p>As noted in the introduction, the help texts are stored as plain files
-and can, unless protected, be accessed by anyone who knows their URL.
-To protect them, place the following four lines in a file named
-<code>.htaccess</code> in project's <code>help</code> directory:</p>
-
-<pre>
-&lt;Files *&gt;
-Order Allow,Deny
-Deny from all
-&lt;/Files&gt;
-</pre>
-
-<p>It as the responsibility of the project author to make sure this type of protection is in place if the project's author has help files that merits protection from direct access.</p>
-
-<p>See also issue :  
-<a href="https://www.drupal.org/node/1980936">#1980936 Typing complete path to .html help files in module bypasses user permissions</a>.</p>
-
 <!--
 <h2 id="project-problems">Known problems</h2>
 -->

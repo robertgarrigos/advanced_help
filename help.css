@@ -1,10 +1,10 @@
 
 .advanced-help-topic pre {
   background: #f1f1f1;
-  border: 1px solid #444;
+  border: 1px solid #ccc;
   display: block;
   margin: 1em;
-  padding: .2em;
+  padding: .4em;
 }
 
 .advanced-help-topic h3,
@@ -53,6 +53,27 @@
 
 .help-box {
   margin: .5em;
+}
+
+.help-block {
+  display: block;
+  clear: both;
+}
+
+.help-img-left {
+  margin-right: 1.5em;
+  border: solid 1px #ccc;
+}
+
+.ta-center {
+  margin: 1em;
+  text-align: center;
+}
+
+.help-img-center {
+  margin-left: auto;
+  margin-right: auto;
+  border: solid 1px #ccc;
 }
 
 .help-navigation {

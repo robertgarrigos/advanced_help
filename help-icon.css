@@ -3,6 +3,7 @@
   background: transparent url('help.png') no-repeat top left;
   background-position: 0px 0px;
   display: block;
+  //display: inline-block;
   float: left; /* this is cheesy, I know */
   height: 12px;
   margin-top: 2px;

@@ -632,8 +632,22 @@ function advanced_help_view_topic($module, $topic, $popup = FALSE) {
 
     $output = file_get_contents($file);
     if (isset($info['readme file']) && $info['readme file']) {
-      // Readme files are treated as plain text: filter accordingly.
-      $output = '<div class="advanced-help-topic"><pre class="readme">' . check_plain($output) . '</pre></div>';
+      $ext = pathinfo($file, PATHINFO_EXTENSION);
+      if ('md' == $ext && module_exists('markdown')) {
+        $filters = module_invoke('markdown', 'filter_info');
+        $md_info = $filters['filter_markdown'];
+	
+        if (function_exists($md_info['process callback'])) {
+          $function = $md_info['process callback'];
+          $output = '<div class="advanced-help-topic">' . filter_xss_admin($function($output, NULL)) . '</div>';
+        }
+        else {
+          $output = '<div class="advanced-help-topic"><pre class="readme">' . check_plain($output) . '</pre></div>';
+        }
+      }
+      else {
+        $output = '<div class="advanced-help-topic"><pre class="readme">' . check_plain($output) . '</pre></div>';
+      }
       return $output;
     }
 

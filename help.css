@@ -1,9 +1,15 @@
-
 .advanced-help-topic pre {
   background: #f1f1f1;
   border: 1px solid #ccc;
   display: block;
   margin: 1em;
+  padding: .4em;
+}
+
+.advanced-help-topic pre.readme {
+  background: white;
+  border: none;
+  margin: 0em;
   padding: .4em;
 }
 

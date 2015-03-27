@@ -633,7 +633,8 @@ function advanced_help_view_topic($module, $topic, $popup = FALSE) {
     $output = file_get_contents($file);
     if (isset($info['readme file']) && $info['readme file']) {
       // Readme files are treated as plain text: filter accordingly.
-      $output = check_plain($output);
+      $output = '<div class="advanced-help-topic"><pre class="readme">' . check_plain($output) . '</pre></div>';
+      return $output;
     }
 
     // Make some exchanges. The strtr is because url() translates $ into %24
@@ -735,6 +736,7 @@ function advanced_help_view_topic($module, $topic, $popup = FALSE) {
 
     $output = '<div class="advanced-help-topic">' . $output . '</div>';
     drupal_alter('advanced_help_topic', $output, $popup);
+    
     return $output;
   }
 }

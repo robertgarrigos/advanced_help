@@ -646,7 +646,14 @@ function advanced_help_view_topic($module, $topic, $popup = FALSE) {
         }
       }
       else {
-        $output = '<div class="advanced-help-topic"><pre class="readme">' . check_plain($output) . '</pre></div>';
+        $output =
+	  '<p>' .
+	  t('If you install the !module module, the text below will be filtered by the module, producing rich text.',
+	  array('!module' => l(t('Markdown filter'),
+	  'https://www.drupal.org/project/markdown',
+	  array('attributes' => array('title' => t('Link to project.')))))) . '</p>' .
+          '<div class="advanced-help-topic"><pre class="readme">' . check_plain($output) .
+	  '</pre></div>';
       }
       return $output;
     }

@@ -541,8 +541,26 @@ function advanced_help_view_topic($module, $topic, $popup = FALSE) {
     $info = advanced_help_get_topic($module, $topic);
     $file = "./$file_info[path]/$file_info[file]";
 
-    // @todo is this trusted output?
     $output = file_get_contents($file);
+    if (isset($info['readme file']) && $info['readme file']) {
+      $ext = pathinfo($file, PATHINFO_EXTENSION);
+      if ('md' == $ext && module_exists('markdown')) {
+        $result = module_invoke('markdown', 'filter', 'process', 0, -1, $output);
+        $output = '<div class="advanced-help-topic"><br/>' . filter_xss_admin($result) . '</div>';
+      }
+      else {
+        $output =
+	  '<p>' .
+	  t('If you install the !module module, this text below will be filtered by the module, producing rich text.',
+	  array('!module' => l(t('Markdown filter'),
+	  'https://www.drupal.org/project/markdown',
+	  array('attributes' => array('title' => t('Link to project.')))))) . '</p>' .
+          '<div class="advanced-help-topic"><pre class="readme">' . check_plain($output) .
+	  '</pre></div>';
+      }
+      return $output;
+    }
+
     // Make some exchanges. The strtr is because url() translates $ into %24
     // but we need to change it back for the regex replacement.
     //
@@ -747,6 +765,7 @@ function _advanced_help_parse_ini() {
             'file' => isset($topic['readme file']) ? $file : $file . '.html',
             // Not in .ini file.
             'path' => $path,
+            'readme file' => isset($topic['readme file']) ? $topic['readme file'] : (isset($cache['settings'][$module]['readme file']) ? $cache['settings'][$module]['readme file'] : FALSE),
             'line break' => isset($topic['line break']) ? $topic['line break'] : (isset($cache['settings'][$module]['line break']) ? $cache['settings'][$module]['line break'] : FALSE),
             'navigation' => isset($topic['navigation']) ? $topic['navigation'] : (isset($cache['settings'][$module]['navigation']) ? $cache['settings'][$module]['navigation'] : TRUE),
             'css' => isset($topic['css']) ? $topic['css'] : (isset($cache['settings'][$module]['css']) ? $cache['settings'][$module]['css'] : NULL),

@@ -40,6 +40,10 @@
   width: 42%;
 }
 
+.help-leftalign {
+  text-align: left;
+}
+
 .help-up {
   display: block;
   float: left; /* LTR */

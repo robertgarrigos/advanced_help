@@ -1120,7 +1120,9 @@ function template_preprocess_advanced_help_popup(&$variables) {
     $variables['content'] = drupal_render($variables['content']);
   }
   // Closure should be filled last.
-  $variables['closure']           = theme('closure');
+  // There has never been a theme hook for closure (going back to
+  // first release 2008-04-17).  Unable to figure out its purpose.
+  // $variables['closure']           = theme('closure');
 }
 
 /**

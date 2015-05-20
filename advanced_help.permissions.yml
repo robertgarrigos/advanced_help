@@ -1,0 +1,6 @@
+view advanced help index:
+  title: 'View help index'
+  restrict access: TRUE
+view advanced help index:
+  title: 'View help topics'
+  restrict access: TRUE

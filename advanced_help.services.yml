@@ -1,0 +1,4 @@
+services:
+  plugin.manager.advanced_help:
+    class: Drupal\advanced_help\AdvancedHelpManager
+    parent: default_plugin_manager

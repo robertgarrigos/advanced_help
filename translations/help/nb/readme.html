@@ -1,35 +1,38 @@
 <h2>Om denne oversettelsen</h2>
 
 <p>Dette er en (delvis) oversettelse til <em>norsk</em> (bokmål) av
-hjelpeteksene for <strong>Advanced help</strong>.  Den er i første
-rekke laget for å vise hvordan en oversettelse av hjelpetekstene ser ut.</p>
+hjelpeteksene for <strong>Avansert hjelp</strong>.  Den er i første
+rekke laget for å vise hvordan en oversettelse av hjelpetekstene ser
+ut.</p>
 
 <h2 id="project-description">Synopsis</h2>
 
-<p>Modulen <strong>Advanced help</strong> tilbyr et rammeverk som gjør
+<p>Modulen <strong>Avansert hjelp</strong> tilbyr et rammeverk som gjør
 det mulig for modul- og theme-utviklere å integrere hjelpetekster i et
 Drupal-nettsted.</p>
 
-<p>These help texts are stored in ordinary <code>.html</code>-files
-that lives in the file system (as opposed to the database).  These
-files are distributed from the project Drupal.org repo in the same
-package as the module or theme, and placed in a subdirectory named
-<code>help</code> in the project or theme directory.  This means that
-the help texts can be easiely kept in sync with the project they
-provide help texts for, but also that read access to these files
-are not managed by any content access restrictions imposed by Drupal.</p>
-  
-<p>The help texts can be marked up with standard HTML, but are
-rendered within your site's Drupal theming structure.</p>
+<p>Disse hjelpetekstene lagres som vanlige <code>.html</code>-filer
+som lever i filsystemet (ikke i databasen).  Disse filene distribueres
+fra prosjektes repo på Drupal.org i den samme pakken som prosjektets
+øvrige filer, og plasseres i en en underkatalog med navnet
+<code>help</code> i prosjektets katalog.  Det innebærer at
+hjelpetekstene på en enkel måte kan holdes synkronisert med det
+prosjektet hjelpen er knyttet til, men også at tilgangen til disse
+filene ikke er underlagt de tilgangsbegrensningene som Drupal
+administrerer.</p>
 
-<p>If the module or theme author does not make use of the full
-<em>Advanced help</em> framework, but if there is a
-<code>README.md</code> or <code>README.txt</code> in the package,
-the content of that file will be shown instead.</p>
+<p>Hjelpetekstene kan bruke standard HTML-markeringer De vil bli vist
+med ditt nettsteds theme.</p>
+
+<p>Dersom prosjektets forfatter ikke bruker HTML-rammeverket for
+<em>Avansert hjelp</em>, men det finnes en 
+<code>README.md</code> eller <code>README.txt</code> i pakken,
+så vil innholdet av den filen vises i stedet.</p>
   
-<p>The help texts may appear in a popup or not as the module prefers.
-By taking away access to view the popups, a site can hide popups from
-users.</p>
+<p>Hjelpetekstene kan vises i et sprettopp-vindu eller ikke, ut fra
+prosjektets preferanser.  Ved å fjerne tilgangen til å se
+sprettopp-vinduer kan nedstedet skjule sprettopp-vinduer fra
+brukere.</p>
 
 <p>The help texts can be placed in a hierarchy, allowing for top down
 navigation of help.</p>
@@ -41,29 +44,29 @@ for keywords.</p>
 
 <h2 id="use">Bruk av modulen</h2>
 
-<p>By itself, this module doesn't do much.  The <strong>Advanced
-help</strong> assists other modules and themes in showing help texts.
+<p>By itself, this module doesn't do much.  The <strong>Avansert
+hjelp</strong> assists other modules and themes in showing help texts.
 Nothing will show up until you enable at least one other module that
 makes use of the advanced help framework or comes with a file
 named <code>README.md</code> or <code>README.txt</code>.  However, it
 comes with a small companion demo module named
-<strong>Advanced help example</strong> to demonstrate how it works.
+<strong>Eksempel på hjelp</strong> to demonstrate how it works.
 For more extensive example of use of the advanced help features, see
 the <strong>Views</strong> project.</p>
 
+<!--
 <h2 id="project-recommended">Anbefalte moduler</h2>
 
 <ul>
-<!--
 <li><a href="https://www.drupal.org/project/markdown">Markdown filter</a>:<br>
 When this module is enabled, display of any <code>README.md</code> the
 module shows will be rendered with markdown.</li>
--->
 <li><a href="https://www.drupal.org/project/attributions">Attributions</a>:<br>
 When this module is enabled, attributions of third party content used
 by the project (i.e. some text from Wikipedia) will be available in an
 attribution block and on an atribution page.</li>
 </ul>
+-->
 
 <h2 id="support-status">Status for oppfølging</h2>
 
@@ -98,9 +101,9 @@ answering &amp; closing support requests.</p>
 <h2 id="project-maintainers">Kreditering</h2>
 
 <ul>
-<li><a href="https://www.drupal.org/u/merlinofchaos"">merlinofchaos</a> (52 commits, original creator)</li>
+<li><a href="https://www.drupal.org/u/merlinofchaos"">merlinofchaos</a> (52 commits, opprinnelig forfatter)</li>
 <li><a href="https://www.drupal.org/u/redndahead">redndahead</a> (8 commits)</li>
 <li><a href="https://www.drupal.org/u/dmitrig01">dmitrig01</a> (3 commits)</li>
 <li><a href="https://www.drupal.org/u/amitgoyal">amitgoyal </a> (5 commits)</li>
-<li><a href="https://www.drupal.org/u/gisle">gisle</a> (current maintainer)</li>
+<li><a href="https://www.drupal.org/u/gisle">gisle</a> (nåværende administrator)</li>
 </ul>

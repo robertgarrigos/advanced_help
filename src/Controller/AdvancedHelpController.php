@@ -29,8 +29,8 @@ class AdvancedHelpController extends ControllerBase {
     $plugins = $manager->getDefinitions();
     $list = [];
 
-    foreach ($plugins as $key => $plugin) {
-      $list[] = $this->l($plugin['name'], new Url('advanced_help.module_index', ['module' => $plugin['id']]));
+    foreach ($plugins as $module_name => $plugin) {
+      $list[] = $this->l($plugin['name'], new Url('advanced_help.module_index', ['module' => $module_name]));
     }
 
     return [
@@ -43,12 +43,10 @@ class AdvancedHelpController extends ControllerBase {
   }
 
   public function moduleIndex($module) {
-    $manager = \Drupal::service('plugin.manager.advanced_help');
-    $plugin = $manager->createInstance($module);
-    $index = $plugin->getIndex();
+    $module_help = \Drupal::service('plugin.manager.advanced_help')->getModuleIndex($module);
     $list = [];
 
-    foreach ($index as $file_name => $attributes) {
+    foreach ($module_help['index'] as $file_name => $attributes) {
       $list[] = $this->l($attributes['title'], new Url('advanced_help.help', ['module' => $module, 'topic' => $file_name]));
     }
 
@@ -56,18 +54,16 @@ class AdvancedHelpController extends ControllerBase {
       'index' => [
         '#theme' => 'item_list',
         '#items' => $list,
-        '#title' => $plugin->getName()
       ]
     ];
   }
 
   public function moduleIndexTitle($module) {
-    $plugin = \Drupal::service('plugin.manager.advanced_help')->createInstance($module);
-    return "{$plugin->getName()} help index";
+    $module_help = \Drupal::service('plugin.manager.advanced_help')->getModuleIndex($module);
+    return "{$module_help['name']} help index";
   }
 
   public function topicPage($module, $topic) {
-
     $path = drupal_get_path('module', $module);
     $path = "{$path}/help/{$topic}.html";
 
@@ -82,7 +78,7 @@ class AdvancedHelpController extends ControllerBase {
   }
 
   public function topicPageTitle($module, $topic) {
-    $plugin = \Drupal::service('plugin.manager.advanced_help')->createInstance($module);
-    return $plugin->getIndex()[$topic]['title'];
+    $module_help = \Drupal::service('plugin.manager.advanced_help')->getModuleIndex($module);
+    return $module_help['index'][$topic]['title'];
   }
 }

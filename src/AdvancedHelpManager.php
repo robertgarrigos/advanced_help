@@ -6,14 +6,15 @@
 
 namespace Drupal\advanced_help;
 
-use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Component\Discovery\YamlDiscovery;
+use Drupal\Core\Plugin\Factory\ContainerFactory;
 
 /**
  * AdvancedHelp plugin manager.
  */
-class AdvancedHelpManager extends DefaultPluginManager {
+class AdvancedHelpManager {
 
   /**
    * Constructs an AdvancedHelpManager object.
@@ -27,8 +28,25 @@ class AdvancedHelpManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Help', $namespaces, $module_handler, 'Drupal\advanced_help\HelpInterface', 'Drupal\advanced_help\Annotation\Help');
-    $this->alterInfo('advancedhelp_help_info');
-    $this->setCacheBackend($cache_backend, 'advancedhelp_help');
+    $this->discovery = new  YamlDiscovery('advanced_help', $module_handler->getModuleDirectories());
+    $this->factory = new ContainerFactory($this, 'Drupal\advanced_help\HelpInterface');
+    $this->moduleHandler = $module_handler;
+
+  }
+
+  public function getDefinitions() {
+      return $this->discovery->findAll();
+  }
+
+  public function getModuleIndex($module_name) {
+    $modules = $this->discovery->findAll();
+
+    foreach ($modules as $module => $data) {
+      if ($module_name == $module) {
+        return $data;
+      }
+    }
+
+    return false;
   }
 }

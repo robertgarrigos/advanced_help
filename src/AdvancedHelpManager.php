@@ -8,30 +8,45 @@ namespace Drupal\advanced_help;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
+use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * AdvancedHelp plugin manager.
  */
-class AdvancedHelpManager {
+class AdvancedHelpManager extends DefaultPluginManager {
+  use StringTranslationTrait;
 
   /**
-   * Constructs an AdvancedHelpManager object.
+   * Constructs an AdvancedHelpManager instance.
    *
-   * @param \Traversable $namespaces
-   *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations,
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   Theme handler.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   *   The string translation service.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    $this->discovery = new  YamlDiscovery('advanced_help', $module_handler->getModuleDirectories());
+  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend, TranslationInterface $string_translation) {
+    $directories = $module_handler->getModuleDirectories() + $theme_handler->getThemeDirectories();
+    // the YML file is in the /{$module}/help folder, we need change the path.
+    array_walk($directories, function(&$item) {
+      $item = $item . "/help";
+    });
+
+    $this->discovery = new YamlDiscovery('help', $directories);
     $this->factory = new ContainerFactory($this, 'Drupal\advanced_help\HelpInterface');
     $this->moduleHandler = $module_handler;
 
+    $this->setStringTranslation($string_translation);
+    $this->alterInfo('advanced_help');
+    $this->setCacheBackend($cache_backend, 'advanced_help', ['advanced_help']);
   }
 
   public function getDefinitions() {

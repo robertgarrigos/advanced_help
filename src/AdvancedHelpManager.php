@@ -14,6 +14,7 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Component\Serialization\Yaml;
 
 /**
  * AdvancedHelp plugin manager.
@@ -34,34 +35,154 @@ class AdvancedHelpManager extends DefaultPluginManager {
    *   The string translation service.
    */
   public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend, TranslationInterface $string_translation) {
-    $directories = $module_handler->getModuleDirectories() + $theme_handler->getThemeDirectories();
-    // the YML file is in the /{$module}/help folder, we need change the path.
-    array_walk($directories, function(&$item) {
-      $item = $item . "/help";
-    });
-
-    $this->discovery = new YamlDiscovery('help', $directories);
-    $this->factory = new ContainerFactory($this, 'Drupal\advanced_help\HelpInterface');
-    $this->moduleHandler = $module_handler;
-
+    $this->module_handler = $module_handler;
+    $this->theme_handler = $theme_handler;
     $this->setStringTranslation($string_translation);
     $this->alterInfo('advanced_help');
     $this->setCacheBackend($cache_backend, 'advanced_help', ['advanced_help']);
   }
 
-  public function getDefinitions() {
-      return $this->discovery->findAll();
+  /**
+   * Get the modules/theme list.
+   * @todo cache
+   */
+  public function getModuleList() {
+    $modules = $this->module_handler->getModuleList();
+    $themes = $this->theme_handler->listInfo();
+    $result = [];
+
+    foreach ($modules + $themes  as $name => $data) {
+      $result[$name] = $data->getName($name);
+    }
+    return $result;
   }
 
-  public function getModuleIndex($module_name) {
-    $modules = $this->discovery->findAll();
-
-    foreach ($modules as $module => $data) {
-      if ($module_name == $module) {
-        return $data;
-      }
+  /**
+   * Get the information for a single help topic.
+   * @param $module
+   * @param $topic
+   * @return string|bool
+   */
+  function getTopic($module, $topic) {
+    $topics = $this->getTopics();
+    if (!empty($topics[$module][$topic])) {
+      return $topics[$module][$topic];
     }
+    return FALSE;
+  }
 
-    return false;
+  /**
+   * Search the system for all available help topics.
+    @todo check visibility of the method.
+   */
+  public function getTopics() {
+    $ini = $this->parseHelp();
+    return $ini['topics'];
+  }
+
+  /**
+   * Returns advanced help settings.
+   * @todo check visibility of the method.
+   */
+  public function getSettings() {
+    $ini = $this->parseHelp();
+    return $ini['settings'];
+  }
+
+
+  /**
+   * Function to parse yml / txt files.
+   *
+   * @todo implement cache
+   * @todo test documentation in a different language.
+   * @todo check visibility of the method.
+   */
+  public function parseHelp() {
+    global $language;
+    static $ini = NULL;
+
+    //    $cache = cache_get('advanced_help_ini:' . $language->language);
+    //    if ($cache) {
+    //      $ini = $cache->data;
+    //    }
+
+    if (!isset($ini)) {
+      $ini = ['topics' => [], 'settings' => []];
+
+      foreach ($this->module_handler->getModuleDirectories() + $this->theme_handler->getThemeDirectories() as $plugin_name => $plugin_path) {
+        $module = $plugin_name;
+        $module_path = $plugin_path;
+        $info = [];
+
+        if (file_exists("$module_path/help/$module.help.yml")) {
+          $path = "$module_path/help";
+          $info =  Yaml::decode(file_get_contents("$module_path/help/$module.help.yml"));
+        }
+        elseif (!file_exists("$module_path/help")) {
+          // Look for one or more README files.
+          $files = file_scan_directory("./$module_path",
+            '/^(readme).*\.(txt|md)$/i', ['recurse' => FALSE]);
+          $path = "./$module_path";
+          foreach ($files as $name => $fileinfo) {
+            $info[$fileinfo->filename] = [
+              'line break' => TRUE,
+              'readme file' => TRUE,
+              'file' => $fileinfo->filename,
+              'title' => $fileinfo->name,
+            ];
+          }
+        }
+
+        if (!empty($info)) {
+          // Get translated titles:
+          $translation = [];
+          if (file_exists("$module_path/translations/help/$language->language/$module.help.yml")) {
+            $translation = Yaml::decode(file_get_contents("$module_path/translations/help/$language->language/$module.help.yml"));
+          }
+
+          $ini['settings'][$module] = [];
+          if (!empty($info['advanced help settings'])) {
+            $ini['settings'][$module] = $info['advanced help settings'];
+            unset($info['advanced help settings']);
+
+            // Check translated strings for translatable global settings.
+            if (isset($translation['advanced help settings']['name'])) {
+              $ini['settings']['name'] = $translation['advanced help settings']['name'];
+            }
+            if (isset($translation['advanced help settings']['index name'])) {
+              $ini['settings']['index name'] = $translation['advanced help settings']['index name'];
+            }
+
+          }
+
+          foreach ($info as $name => $topic) {
+            // Each topic should have a name, a title, a file and path.
+            $file = !empty($topic['file']) ? $topic['file'] : $name;
+            $ini['topics'][$module][$name] = [
+              'name' => $name,
+              'module' => $module,
+              'ini' => $topic,
+              'title' => !empty($translation[$name]['title']) ? $translation[$name]['title'] : $topic['title'],
+              'weight' => isset($topic['weight']) ? $topic['weight'] : 0,
+              'parent' => isset($topic['parent']) ? $topic['parent'] : 0,
+              'popup width' => isset($topic['popup width']) ? $topic['popup width'] : 500,
+              'popup height' => isset($topic['popup height']) ? $topic['popup height'] : 500,
+              // Require extension.
+              'file' => isset($topic['readme file']) ? $file : $file . '.html',
+              // Not in .ini file.
+              'path' => $path,
+              'line break' => isset($topic['line break']) ? $topic['line break'] : (isset($ini['settings'][$module]['line break']) ? $ini['settings'][$module]['line break'] : FALSE),
+              'navigation' => isset($topic['navigation']) ? $topic['navigation'] : (isset($ini['settings'][$module]['navigation']) ? $ini['settings'][$module]['navigation'] : TRUE),
+              'css' => isset($topic['css']) ? $topic['css'] : (isset($ini['settings'][$module]['css']) ? $ini['settings'][$module]['css'] : NULL),
+              'readme file' => isset($topic['readme file']) ? $topic['readme file'] : FALSE,
+            ];
+          }
+        }
+      }
+      // drupal_alter('advanced_help_topic_info', $ini);
+
+      //cache_set('advanced_help_ini:' . $language->language, $ini);
+    }
+    return $ini;
   }
 }

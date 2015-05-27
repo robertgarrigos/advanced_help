@@ -10,7 +10,7 @@ namespace Drupal\advanced_help\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use Drupal\Component\Utility\SafeMarkup;
 /**
  * Class AdvancedHelpController.
  *
@@ -191,22 +191,204 @@ class AdvancedHelpController extends ControllerBase {
   }
 
   public function topicPage($module, $topic) {
-    $path = drupal_get_path('module', $module);
-    $path = "{$path}/help/{$topic}.html";
-
-    if (file_exists($path)) {
-      $content = file_get_contents($path);
+    $info = $this->advanced_help->getTopic($module, $topic);
+    if (!$info) {
+      throw new NotFoundHttpException();
     }
 
+    $parent = $info;
+    $pmodule = $module;
+
+    // Loop checker.
+    $checked = array();
+    while (!empty($parent['parent'])) {
+      if (strpos($parent['parent'], '%')) {
+        list($pmodule, $ptopic) = explode('%', $parent['parent']);
+      }
+      else {
+        $ptopic = $parent['parent'];
+      }
+
+      if (!empty($checked[$pmodule][$ptopic])) {
+        break;
+      }
+
+      $checked[$pmodule][$ptopic] = TRUE;
+
+      $parent = $this->advanced_help->getTopic($pmodule, $ptopic);
+      if (!$parent) {
+        break;
+      }
+
+    }
+
+    $output = $this->viewTopic($module, $topic);
+    if (empty($output)) {
+      $output = t('Missing help topic.');
+    }
+
+    //drupal_add_css(drupal_get_path('module', 'advanced_help') . '/help.css');
     return [
       '#type' => 'markup',
-      '#markup' => $content,
+      '#markup' => $output,
     ];
   }
+
+    /**
+   * Load and render a help topic.
+   *
+   * @param string $module
+   *   Name of the module.
+   * @param string $topic
+   *   Name of the topic.
+   * @todo integrate with the markdown filter module.
+   * @todo Let the topics add their custom CSS file.
+   * @todo port the drupal_alter functionality.
+   *
+   * @return string
+   *   Returns formatted topic.
+   */
+  public function viewTopic($module, $topic) {
+    $file_info = $this->advanced_help->getTopicFileInfo($module, $topic);
+    if ($file_info) {
+      $info = $this->advanced_help->getTopic($module, $topic);
+      $file = "{$file_info['path']}/{$file_info['file']}";
+
+      $output = file_get_contents($file);
+
+      // @todo check the status of the markdown filter module for D8.
+      if (isset($info['readme file']) && $info['readme file']) {
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+//        if ('md' == $ext && module_exists('markdown')) {
+//          $filters = module_invoke('markdown', 'filter_info');
+//          $md_info = $filters['filter_markdown'];
+//
+//          if (function_exists($md_info['process callback'])) {
+//            $function = $md_info['process callback'];
+//            $output = '<div class="advanced-help-topic">' . filter_xss_admin($function($output, NULL)) . '</div>';
+//          }
+//          else {
+//            $output = '<div class="advanced-help-topic"><pre class="readme">' . check_plain($output) . '</pre></div>';
+//          }
+//        }
+//        else {
+        $readme = '';
+        if ('md' == $ext) {
+          $readme .=
+            '<p>' .
+            t('If you install the !module module, the text below will be filtered by the module, producing rich text.',
+              array(
+                '!module' => l(t('Markdown filter'),
+                  'https://www.drupal.org/project/markdown',
+                  array('attributes' => array('title' => t('Link to project.'))))
+              )) . '</p>';
+        }
+
+        $readme .=
+          '<div class="advanced-help-topic"><pre class="readme">' . check_plain($output) . '</pre></div>';
+        $output = $readme;
+        //}
+        return $output;
+      }
+
+
+      // Change 'topic:' to the URL for another help topic.
+      preg_match('/&topic:([^"]+)&/', $output, $matches);
+      if (isset($matches[1]) && preg_match('/[\w\-]\/[\w\-]+/', $matches[1])) {
+        list($umodule, $utopic) = explode('/', $matches[1]);
+        $path = new Url('advanced_help.help', ['module' => $umodule, 'topic' => $utopic]);
+        $output = preg_replace('/&topic:([^"]+)&/', $path->toString(), $output);
+      }
+
+      global $base_path;
+
+      // Change 'path:' to the URL to the base help directory.
+      $output = str_replace('&path&', $base_path . $info['path'] . '/', $output);
+
+      // Change 'trans_path:' to the URL to the actual help directory.
+      $output = str_replace('&trans_path&', $base_path . $file_info['path'] . '/', $output);
+
+      // Change 'base_url:' to the URL to the site.
+      $output = preg_replace('/&base_url&([^"]+)"/', $base_path . '$1' . '"', $output);
+
+      // Run the line break filter if requested.
+      if (!empty($info['line break'])) {
+        // Remove the header since it adds an extra <br /> to the filter.
+        $output = preg_replace('/^<!--[^\n]*-->\n/', '', $output);
+
+        $output = _filter_autop($output);
+      }
+
+      if (!empty($info['navigation'])) {
+        $topics = $this->advanced_help->getTopics();
+        $topics = $this->getTopicHierarchy($topics);
+        if (!empty($topics[$module][$topic]['children'])) {
+          $items = $this->getTree($topics, $topics[$module][$topic]['children']);
+          $links = [
+            '#theme' => 'item_list',
+            '#items' => $items
+          ];
+          $output .= \Drupal::service('renderer')->render($links, FALSE);
+        }
+
+        list($parent_module, $parent_topic) = $topics[$module][$topic]['_parent'];
+        if ($parent_topic) {
+          $parent = $topics[$module][$topic]['_parent'];
+          $up = new Url('advanced_help.help', ['module' => $parent[0], 'topic' => $parent[1]]);
+        }
+        else {
+          $up = new Url('advanced_help.module_index', ['module' => $module]);
+        }
+
+        $siblings = $topics[$parent_module][$parent_topic]['children'];
+        uasort($siblings, [$this, 'helpUasort']);
+        $prev = $next = NULL;
+        $found = FALSE;
+        foreach ($siblings as $sibling) {
+          list($sibling_module, $sibling_topic) = $sibling;
+          if ($found) {
+            $next = $sibling;
+            break;
+          }
+          if ($sibling_module == $module && $sibling_topic == $topic) {
+            $found = TRUE;
+            continue;
+          }
+          $prev = $sibling;
+        }
+
+        if ($prev || $up || $next) {
+          $navigation = '<div class="help-navigation clear-block">';
+
+          if ($prev) {
+            $navigation .= $this->l('«« ' . $topics[$prev[0]][$prev[1]]['title'], new Url('advanced_help.help', ['module' => $prev[0], 'topic' => $prev[1]], ['attributes' => ['class' => 'help-left']]));
+          }
+          if ($up) {
+            $navigation .= $this->l(t('Up'), $up->setOption('attributes', ['class' => ($prev) ? 'help-up' : 'help-up-noleft']));
+          }
+          if ($next) {
+            $navigation .= $this->l($topics[$next[0]][$next[1]]['title'] . ' »»', new Url('advanced_help.help', ['module' => $next[0], 'topic' => $next[1]], ['attributes' => ['class' => 'help-right']]));
+          }
+
+          $navigation .= '</div>';
+
+          $output .= $navigation;
+        }
+      }
+
+//      if (!empty($info['css'])) {
+//        drupal_add_css($info['path'] . '/' . $info['css']);
+//      }
+
+      $output = '<div class="advanced-help-topic">' . $output . '</div>';
+//      drupal_alter('advanced_help_topic', $output, $popup);
+
+      return $output;
+    }
+  }
+
 
   public function topicPageTitle($module, $topic) {
     return $topic;
   }
-
-
 }

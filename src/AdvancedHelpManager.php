@@ -94,11 +94,10 @@ class AdvancedHelpManager extends DefaultPluginManager {
    * Function to parse yml / txt files.
    *
    * @todo implement cache
-   * @todo test documentation in a different language.
    * @todo check visibility of the method.
    */
   public function parseHelp() {
-    global $language;
+    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
     static $ini = NULL;
 
     //    $cache = cache_get('advanced_help_ini:' . $language->language);
@@ -109,9 +108,9 @@ class AdvancedHelpManager extends DefaultPluginManager {
     if (!isset($ini)) {
       $ini = ['topics' => [], 'settings' => []];
 
-      foreach ($this->module_handler->getModuleDirectories() + $this->theme_handler->getThemeDirectories() as $plugin_name => $plugin_path) {
+      foreach ($this->module_handler->getModuleList() + $this->theme_handler->listInfo() as $plugin_name => $extension) {
         $module = $plugin_name;
-        $module_path = $plugin_path;
+        $module_path = $extension->getPath();
         $info = [];
 
         if (file_exists("$module_path/help/$module.help.yml")) {
@@ -136,8 +135,8 @@ class AdvancedHelpManager extends DefaultPluginManager {
         if (!empty($info)) {
           // Get translated titles:
           $translation = [];
-          if (file_exists("$module_path/translations/help/$language->language/$module.help.yml")) {
-            $translation = Yaml::decode(file_get_contents("$module_path/translations/help/$language->language/$module.help.yml"));
+          if (file_exists("$module_path/translations/help/$language/$module.help.yml")) {
+            $translation = Yaml::decode(file_get_contents("$module_path/translations/help/$language/$module.help.yml"));
           }
 
           $ini['settings'][$module] = [];
@@ -184,5 +183,40 @@ class AdvancedHelpManager extends DefaultPluginManager {
       //cache_set('advanced_help_ini:' . $language->language, $ini);
     }
     return $ini;
+  }
+
+  /**
+   * Load and render a help topic.
+   *
+   * @todo allow the theme override the help.
+   * @param $module.
+   * @param $topic.
+   * @return array.
+  */
+  function getTopicFileInfo($module, $topic) {
+    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+    $info = $this->getTopic($module, $topic);
+    if (empty($info)) {
+      return FALSE;
+    }
+
+    // Search paths:
+    $paths = [
+//      // Allow theme override.
+//      path_to_theme() . '/help',
+      // Translations.
+      drupal_get_path('module', $module) . "/translations/help/$language",
+      // In same directory as .inc file.
+      $info['path'],
+    ];
+
+    foreach ($paths as $path) {
+      if (file_exists("$path/$info[file]")) {
+        return ['path' => $path, 'file' => $info['file']];
+      }
+    }
+
+    return FALSE;
   }
 }

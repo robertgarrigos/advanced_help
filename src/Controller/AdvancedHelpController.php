@@ -11,6 +11,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Xss;
 /**
  * Class AdvancedHelpController.
  *
@@ -259,35 +260,27 @@ class AdvancedHelpController extends ControllerBase {
       // @todo check the status of the markdown filter module for D8.
       if (isset($info['readme file']) && $info['readme file']) {
         $ext = pathinfo($file, PATHINFO_EXTENSION);
-//        if ('md' == $ext && module_exists('markdown')) {
-//          $filters = module_invoke('markdown', 'filter_info');
-//          $md_info = $filters['filter_markdown'];
-//
-//          if (function_exists($md_info['process callback'])) {
-//            $function = $md_info['process callback'];
-//            $output = '<div class="advanced-help-topic">' . filter_xss_admin($function($output, NULL)) . '</div>';
-//          }
-//          else {
-//            $output = '<div class="advanced-help-topic"><pre class="readme">' . check_plain($output) . '</pre></div>';
-//          }
-//        }
-//        else {
-        $readme = '';
-        if ('md' == $ext) {
-          $readme .=
-            '<p>' .
-            $this->t('If you install the !module module, the text below will be filtered by the module, producing rich text.',
-              array(
-                '!module' => $this->l($this->t('Markdown filter'),
-                  'https://www.drupal.org/project/markdown',
-                  array('attributes' => array('title' => $this->t('Link to project.'))))
-              )) . '</p>';
+        if ('md' == $ext && $this->advanced_help->isMarkdownFilterEnabled()) {
+          libraries_load('php-markdown', 'markdown-extra');
+          $output = '<div class="advanced-help-topic">' . Xss::filterAdmin(\Michelf\MarkdownExtra::defaultTransform($output)) . '</div>';
         }
+        else {
+          $readme = '';
+          if ('md' == $ext) {
+            $readme .=
+              '<p>' .
+              $this->t('If you install the !module module, the text below will be filtered by the module, producing rich text.',
+                [
+                  '!module' => $this->l($this->t('Markdown filter'),
+                    Url::fromUri('https://www.drupal.org/project/markdown'),
+                    ['attributes' => ['title' => $this->t('Link to project.')]])
+                ]) . '</p>';
+          }
 
-        $readme .=
-          '<div class="advanced-help-topic"><pre class="readme">' . check_plain($output) . '</pre></div>';
-        $output = $readme;
-        //}
+          $readme .=
+            '<div class="advanced-help-topic"><pre class="readme">' . SafeMarkup::checkPlain($output) . '</pre></div>';
+          $output = $readme;
+        }
         return $output;
       }
 

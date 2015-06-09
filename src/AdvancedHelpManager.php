@@ -193,7 +193,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
    * @param $topic.
    * @return array.
   */
-  function getTopicFileInfo($module, $topic) {
+  public function getTopicFileInfo($module, $topic) {
     $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
     $info = $this->getTopic($module, $topic);
@@ -218,5 +218,13 @@ class AdvancedHelpManager extends DefaultPluginManager {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Return true if the markdown filter is present.
+   * @return bool
+   */
+  public function isMarkdownFilterEnabled() {
+    return $this->module_handler->moduleExists('markdown');
   }
 }

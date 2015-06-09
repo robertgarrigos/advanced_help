@@ -63,7 +63,7 @@ class AdvancedHelpController extends ControllerBase {
       'help_modules' => [
         '#theme' => 'item_list',
         '#items' => $items,
-        '#title' => t('Module help index'),
+        '#title' => $this->t('Module help index'),
       ]
     ];
   }
@@ -224,7 +224,7 @@ class AdvancedHelpController extends ControllerBase {
 
     $output = $this->viewTopic($module, $topic);
     if (empty($output)) {
-      $output = t('Missing help topic.');
+      $output = $this->t('Missing help topic.');
     }
 
     //drupal_add_css(drupal_get_path('module', 'advanced_help') . '/help.css');
@@ -276,11 +276,11 @@ class AdvancedHelpController extends ControllerBase {
         if ('md' == $ext) {
           $readme .=
             '<p>' .
-            t('If you install the !module module, the text below will be filtered by the module, producing rich text.',
+            $this->t('If you install the !module module, the text below will be filtered by the module, producing rich text.',
               array(
-                '!module' => l(t('Markdown filter'),
+                '!module' => $this->l($this->t('Markdown filter'),
                   'https://www.drupal.org/project/markdown',
-                  array('attributes' => array('title' => t('Link to project.'))))
+                  array('attributes' => array('title' => $this->t('Link to project.'))))
               )) . '</p>';
         }
 
@@ -364,7 +364,7 @@ class AdvancedHelpController extends ControllerBase {
             $navigation .= $this->l('«« ' . $topics[$prev[0]][$prev[1]]['title'], new Url('advanced_help.help', ['module' => $prev[0], 'topic' => $prev[1]], ['attributes' => ['class' => 'help-left']]));
           }
           if ($up) {
-            $navigation .= $this->l(t('Up'), $up->setOption('attributes', ['class' => ($prev) ? 'help-up' : 'help-up-noleft']));
+            $navigation .= $this->l($this->t('Up'), $up->setOption('attributes', ['class' => ($prev) ? 'help-up' : 'help-up-noleft']));
           }
           if ($next) {
             $navigation .= $this->l($topics[$next[0]][$next[1]]['title'] . ' »»', new Url('advanced_help.help', ['module' => $next[0], 'topic' => $next[1]], ['attributes' => ['class' => 'help-right']]));

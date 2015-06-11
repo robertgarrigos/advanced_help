@@ -228,10 +228,14 @@ class AdvancedHelpController extends ControllerBase {
       $output = $this->t('Missing help topic.');
     }
 
-    //drupal_add_css(drupal_get_path('module', 'advanced_help') . '/help.css');
     return [
       '#type' => 'markup',
       '#markup' => $output,
+      '#attached' => [
+        'library' => [
+          'advanced_help/help'
+        ]
+      ]
     ];
   }
 

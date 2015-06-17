@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ *
+ * Remove the admin menu in case the help module is enabled.
+ */
+function advanced_help_menu_links_discovered_alter(&$links) {
+
+  if (Drupal::moduleHandler()->moduleExists('help')) {
+    unset($links['advanced_help.main']);
+  }
+}

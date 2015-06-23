@@ -100,10 +100,10 @@ class AdvancedHelpManager extends DefaultPluginManager {
     $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
     static $ini = NULL;
 
-    //    $cache = cache_get('advanced_help_ini:' . $language->language);
-    //    if ($cache) {
-    //      $ini = $cache->data;
-    //    }
+    $cache = $this->cacheGet('advanced_help_ini_' . $language);
+    if ($cache) {
+      $ini = $cache->data;
+    }
 
     if (!isset($ini)) {
       $ini = ['topics' => [], 'settings' => []];
@@ -179,8 +179,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
         }
       }
       // drupal_alter('advanced_help_topic_info', $ini);
-
-      //cache_set('advanced_help_ini:' . $language->language, $ini);
+      $this->cacheSet('advanced_help_ini_' . $language, $ini);
     }
     return $ini;
   }

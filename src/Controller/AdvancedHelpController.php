@@ -10,8 +10,11 @@ namespace Drupal\advanced_help\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
  * Class AdvancedHelpController.
  *
@@ -20,13 +23,24 @@ use Drupal\Component\Utility\Xss;
 class AdvancedHelpController extends ControllerBase {
 
   /**
-   * @var THe advanced help plugin.
+   * The advanced help plugin manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   private $advanced_help;
 
 
-  public function __construct() {
-    $this->advanced_help = \Drupal::service('plugin.manager.advanced_help');
+  public function __construct(PluginManagerInterface $advanced_help) {
+    $this->advanced_help = $advanced_help;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.advanced_help')
+    );
   }
 
   /**

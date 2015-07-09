@@ -237,20 +237,12 @@ class AdvancedHelpController extends ControllerBase {
 
     }
 
-    $output = $this->viewTopic($module, $topic);
-    if (empty($output)) {
-      $output = $this->t('Missing help topic.');
+    $build = $this->viewTopic($module, $topic);
+    if (empty($build['#markup'])) {
+      $build['#markup'] = $this->t('Missing help topic.');
     }
-
-    return [
-      '#type' => 'markup',
-      '#markup' => $output,
-      '#attached' => [
-        'library' => [
-          'advanced_help/help'
-        ]
-      ]
-    ];
+    $build['#attached']['library'][] = 'advanced_help/help';
+    return $build;
   }
 
     /**
@@ -260,8 +252,6 @@ class AdvancedHelpController extends ControllerBase {
    *   Name of the module.
    * @param string $topic
    *   Name of the topic.
-   * @todo integrate with the markdown filter module.
-   * @todo Let the topics add their custom CSS file.
    * @todo port the drupal_alter functionality.
    *
    * @return string
@@ -272,15 +262,20 @@ class AdvancedHelpController extends ControllerBase {
     if ($file_info) {
       $info = $this->advanced_help->getTopic($module, $topic);
       $file = "{$file_info['path']}/{$file_info['file']}";
+      $build = [
+        '#type' => 'markup',
+      ];
 
-      $output = file_get_contents($file);
+      if (!empty($info['css'])) {
+        $build['#attached']['library'][] = $info['module'] . '/' . $info['css'];
+      }
 
-      // @todo check the status of the markdown filter module for D8.
+      $build['#markup'] = file_get_contents($file);
       if (isset($info['readme file']) && $info['readme file']) {
         $ext = pathinfo($file, PATHINFO_EXTENSION);
         if ('md' == $ext && $this->advanced_help->isMarkdownFilterEnabled()) {
           libraries_load('php-markdown', 'markdown-extra');
-          $output = '<div class="advanced-help-topic">' . Xss::filterAdmin(\Michelf\MarkdownExtra::defaultTransform($output)) . '</div>';
+          $build['#markup'] = '<div class="advanced-help-topic">' . Xss::filterAdmin(\Michelf\MarkdownExtra::defaultTransform($build['#markup'])) . '</div>';
         }
         else {
           $readme = '';
@@ -296,38 +291,37 @@ class AdvancedHelpController extends ControllerBase {
           }
 
           $readme .=
-            '<div class="advanced-help-topic"><pre class="readme">' . SafeMarkup::checkPlain($output) . '</pre></div>';
-          $output = $readme;
+            '<div class="advanced-help-topic"><pre class="readme">' . SafeMarkup::checkPlain($build['#markup']) . '</pre></div>';
+          $build['#markup'] = $readme;
         }
-        return $output;
+        return $build['#markup'];
       }
 
-
       // Change 'topic:' to the URL for another help topic.
-      preg_match('/&topic:([^"]+)&/', $output, $matches);
+      preg_match('/&topic:([^"]+)&/', $build['#markup'], $matches);
       if (isset($matches[1]) && preg_match('/[\w\-]\/[\w\-]+/', $matches[1])) {
         list($umodule, $utopic) = explode('/', $matches[1]);
         $path = new Url('advanced_help.help', ['module' => $umodule, 'topic' => $utopic]);
-        $output = preg_replace('/&topic:([^"]+)&/', $path->toString(), $output);
+        $build['#markup'] = preg_replace('/&topic:([^"]+)&/', $path->toString(), $build['#markup']);
       }
 
       global $base_path;
 
       // Change 'path:' to the URL to the base help directory.
-      $output = str_replace('&path&', $base_path . $info['path'] . '/', $output);
+      $build['#markup'] = str_replace('&path&', $base_path . $info['path'] . '/', $build['#markup']);
 
       // Change 'trans_path:' to the URL to the actual help directory.
-      $output = str_replace('&trans_path&', $base_path . $file_info['path'] . '/', $output);
+      $build['#markup'] = str_replace('&trans_path&', $base_path . $file_info['path'] . '/', $build['#markup']);
 
       // Change 'base_url:' to the URL to the site.
-      $output = preg_replace('/&base_url&([^"]+)"/', $base_path . '$1' . '"', $output);
+      $build['#markup'] = preg_replace('/&base_url&([^"]+)"/', $base_path . '$1' . '"', $build['#markup']);
 
       // Run the line break filter if requested.
       if (!empty($info['line break'])) {
         // Remove the header since it adds an extra <br /> to the filter.
-        $output = preg_replace('/^<!--[^\n]*-->\n/', '', $output);
+        $build['#markup'] = preg_replace('/^<!--[^\n]*-->\n/', '', $build['#markup']);
 
-        $output = _filter_autop($output);
+        $build['#markup'] = _filter_autop($build['#markup']);
       }
 
       if (!empty($info['navigation'])) {
@@ -339,7 +333,7 @@ class AdvancedHelpController extends ControllerBase {
             '#theme' => 'item_list',
             '#items' => $items
           ];
-          $output .= \Drupal::service('renderer')->render($links, FALSE);
+          $build['#markup'] .= \Drupal::service('renderer')->render($links, FALSE);
         }
 
         list($parent_module, $parent_topic) = $topics[$module][$topic]['_parent'];
@@ -382,19 +376,12 @@ class AdvancedHelpController extends ControllerBase {
           }
 
           $navigation .= '</div>';
-
-          $output .= $navigation;
+          $build['#markup'] .= $navigation;
         }
       }
-
-//      if (!empty($info['css'])) {
-//        drupal_add_css($info['path'] . '/' . $info['css']);
-//      }
-
-      $output = '<div class="advanced-help-topic">' . $output . '</div>';
+      $build['#markup'] = '<div class="advanced-help-topic">' . $build['#markup'] . '</div>';
 //      drupal_alter('advanced_help_topic', $output, $popup);
-
-      return $output;
+      return $build;
     }
   }
 

@@ -18,12 +18,15 @@ help.png:
   license: CC0
   rights: https://creativecommons.org/publicdomain/zero/1.0/
   source: unknown origin
+  hide: TRUE
 
 help/ahelp_tab.png:
   title: ahelp_tab.png
+  hide: TRUE
   a: *screendumps
 
 help/click_icon.png:
   title: click_icon.png
+  hide: TRUE
   a: *screendumps
 

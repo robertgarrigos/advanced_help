@@ -11,3 +11,11 @@ function advanced_help_menu_links_discovered_alter(&$links) {
     unset($links['advanced_help.main']);
   }
 }
+
+/**
+ * Implements hook_modules_installed().
+ */
+function advanced_help_modules_installed($modules) {
+  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  \Drupal::cache('discovery')->invalidate('advanced_help_ini_' . $language);
+}

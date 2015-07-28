@@ -52,7 +52,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
     $result = [];
 
     foreach ($modules + $themes  as $name => $data) {
-      $result[$name] = $data->getName($name);
+      $result[$name] = $this->module_handler->getName($name);
     }
     return $result;
   }

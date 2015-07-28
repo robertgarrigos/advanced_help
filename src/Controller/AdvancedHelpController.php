@@ -385,8 +385,11 @@ class AdvancedHelpController extends ControllerBase {
     }
   }
 
-
   public function topicPageTitle($module, $topic) {
-    return $topic;
+    $info = $this->advanced_help->getTopic($module, $topic);
+    if (!$info) {
+      throw new NotFoundHttpException();
+    }
+    return $info['title'];
   }
 }

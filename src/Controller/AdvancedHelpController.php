@@ -128,6 +128,9 @@ class AdvancedHelpController extends ControllerBase {
 
   /**
    * Helper function to sort topics.
+   * @param string $id_a
+   * @param string $id_b
+   * @return mixed
    */
   private function helpUasort($id_a, $id_b) {
     $topics = $this->advanced_help->getTopics();
@@ -201,8 +204,14 @@ class AdvancedHelpController extends ControllerBase {
     ];
   }
 
+  /**
+   * Set the name of the module in the index page.
+   *
+   * @param string $module Module name
+   * @return string
+   */
   public function moduleIndexTitle($module) {
-    return $module;
+    return $this->advanced_help->getModuleName($module) . ' help index';
   }
 
   public function topicPage($module, $topic) {
@@ -385,6 +394,12 @@ class AdvancedHelpController extends ControllerBase {
     }
   }
 
+  /**
+   * Set the title of the topic.
+   * @param $module
+   * @param $topic
+   * @return string
+   */
   public function topicPageTitle($module, $topic) {
     $info = $this->advanced_help->getTopic($module, $topic);
     if (!$info) {

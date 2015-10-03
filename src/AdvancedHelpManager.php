@@ -72,6 +72,15 @@ class AdvancedHelpManager extends DefaultPluginManager {
   }
 
   /**
+   * Return the name of the module.
+   * @param string $module
+   * @return string
+   */
+  function getModuleName($module) {
+    return $this->module_handler->getName($module);
+  }
+
+  /**
    * Search the system for all available help topics.
     @todo check visibility of the method.
    */

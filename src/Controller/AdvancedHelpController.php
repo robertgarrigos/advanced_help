@@ -14,6 +14,8 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class AdvancedHelpController.
@@ -214,7 +216,8 @@ class AdvancedHelpController extends ControllerBase {
     return $this->advanced_help->getModuleName($module) . ' help index';
   }
 
-  public function topicPage($module, $topic) {
+  public function topicPage(Request $request, $module, $topic) {
+    $is_modal = ($request->query->get(MainContentViewSubscriber::WRAPPER_FORMAT) === 'drupal_modal');
     $info = $this->advanced_help->getTopic($module, $topic);
     if (!$info) {
       throw new NotFoundHttpException();
@@ -246,7 +249,7 @@ class AdvancedHelpController extends ControllerBase {
 
     }
 
-    $build = $this->viewTopic($module, $topic);
+    $build = $this->viewTopic($module, $topic, $is_modal);
     if (empty($build['#markup'])) {
       $build['#markup'] = $this->t('Missing help topic.');
     }
@@ -266,7 +269,7 @@ class AdvancedHelpController extends ControllerBase {
    * @return string
    *   Returns formatted topic.
    */
-  public function viewTopic($module, $topic) {
+  public function viewTopic($module, $topic, $is_modal = false) {
     $file_info = $this->advanced_help->getTopicFileInfo($module, $topic);
     if ($file_info) {
       $info = $this->advanced_help->getTopic($module, $topic);
@@ -333,7 +336,7 @@ class AdvancedHelpController extends ControllerBase {
         $build['#markup'] = _filter_autop($build['#markup']);
       }
 
-      if (!empty($info['navigation'])) {
+      if (!empty($info['navigation']) && !$is_modal) {
         $topics = $this->advanced_help->getTopics();
         $topics = $this->getTopicHierarchy($topics);
         if (!empty($topics[$module][$topic]['children'])) {

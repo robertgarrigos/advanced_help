@@ -1,5 +1,6 @@
 <?php
 use Drupal\Core\Template\Attribute;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Implements hook_menu_links_discovered_alter().
@@ -51,13 +52,15 @@ function advanced_help_preprocess_advanced_help_topic(&$variables) {
   $variables['attributes']['title'] = $info['title'];
 
   if (\Drupal::currentUser()->hasPermission('view advanced help popup')) {
-    $variables['attributes']['class'][] = 'advanced-help-popup-enabled';
+    $variables['attributes']['class'][] = 'advanced-help-link';
+    $variables['attributes']['class'][] = 'use-ajax';
+    $variables['attributes']['data-dialog-type'] = 'modal';
+    $variables['attributes']['data-dialog-options'] = Json::encode(['width' => $info['popup width'], 'height' => $info['popup height']]);
+    $variables['#attached']['library'][] = 'advanced_help/help.icon';
   }
   switch ($type) {
     case 'icon':
       $variables['text'] = '<span>' . t('Help') . '</span>';
-      $variables['attributes']['class'][] = 'advanced-help-link';
-      $variables['#attached']['library'][] = 'advanced_help/help.icon';
       break;
 
     case 'title':

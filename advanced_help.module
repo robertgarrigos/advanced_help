@@ -1,4 +1,5 @@
 <?php
+use Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_menu_links_discovered_alter().
@@ -44,42 +45,29 @@ function advanced_help_preprocess_advanced_help_topic(&$variables) {
   $type   = $variables['type'];
 
   $advancedHelp = \Drupal::service('plugin.manager.advanced_help');
-  $variables['topic_exists'] = $advancedHelp->getTopic($module, $topic);
+  $info = $variables['topic_exists'] = $advancedHelp->getTopic($module, $topic);
+  $variables['attributes'] = new Attribute();
+  $variables['attributes']['class'] = [];
+  $variables['attributes']['title'] = $info['title'];
 
+  if (\Drupal::currentUser()->hasPermission('view advanced help popup')) {
+    $variables['attributes']['class'][] = 'advanced-help-popup-enabled';
+  }
   switch ($type) {
     case 'icon':
       $variables['text'] = '<span>' . t('Help') . '</span>';
-      $variables['class'] = 'advanced-help-link';
+      $variables['attributes']['class'][] = 'advanced-help-link';
+      $variables['#attached']['library'][] = 'advanced_help/help.icon';
       break;
 
     case 'title':
       $variables['text'] = $info['title'];
-      $variables['class'] = 'advanced-help-title';
+      $variables['attributes']['class'][] = 'advanced-help-title';
       break;
 
     default:
-      $variables['class'] = 'advanced-help-title';
       $variables['text'] = $type;
+      $variables['attributes']['class'][] = 'advanced-help-title';
       break;
   }
-  //if (user_access('view advanced help popup')) {
-    //drupal_add_css(drupal_get_path('module', 'advanced_help') . '/help-icon.css');
-//    return l($text, "help/$module/$topic", array(
-//        'attributes' => array(
-//          'class' => $class,
-//          'onclick' => "var w=window.open(this.href, 'advanced_help_window', 'width=" . $info['popup width'] . ",height=" . $info['popup height'] . ",scrollbars,resizable'); w.focus(); return false;",
-//          'title' => $info['title'],
-//        ),
-//        'query' => array('popup' => TRUE),
-//        'html' => TRUE)
-//    );
-  //}
-  //elseif (user_access('view advanced help topic')) {
-  //}
-//  array(
-//    'attributes' => array(
-//      'class' => $class,
-//      'title' => $info['title'],
-//    ),
-//    'html' => TRUE)
 }

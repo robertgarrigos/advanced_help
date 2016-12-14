@@ -5,8 +5,6 @@ namespace Drupal\advanced_help;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Component\Discovery\YamlDiscovery;
-use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -78,7 +76,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
 
   /**
    * Search the system for all available help topics.
-    @todo check visibility of the method.
+   * @todo check visibility of the method.
    */
   public function getTopics() {
     $ini = $this->parseHelp();

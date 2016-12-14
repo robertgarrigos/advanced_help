@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\advanced_help\Controller\AdvancedHelpController.
- */
-
 namespace Drupal\advanced_help\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

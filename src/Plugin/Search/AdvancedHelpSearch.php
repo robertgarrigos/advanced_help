@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\advanced_help\Plugin\Search\AdvancedHelpSearch.
- */
-
 namespace Drupal\advanced_help\Plugin\Search;
 
 use Drupal\Core\Access\AccessResult;

@@ -203,12 +203,13 @@ class AdvancedHelpManager extends DefaultPluginManager {
       return FALSE;
     }
 
+    $path_type = (preg_match('/themes/', $info['path'])) ? 'theme' : 'module';
     // Search paths:
     $paths = [
 //      // Allow theme override.
 //      path_to_theme() . '/help',
       // Translations.
-      drupal_get_path('module', $module) . "/translations/help/$language",
+      drupal_get_path($path_type, $module) . "/translations/help/$language",
       // In same directory as .inc file.
       $info['path'],
     ];

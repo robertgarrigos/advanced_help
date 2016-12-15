@@ -301,7 +301,7 @@ class AdvancedHelpController extends ControllerBase {
             '<div class="advanced-help-topic"><pre class="readme">' . SafeMarkup::checkPlain($build['#markup']) . '</pre></div>';
           $build['#markup'] = $readme;
         }
-        return $build['#markup'];
+        return $build;
       }
 
       // Change 'topic:' to the URL for another help topic.

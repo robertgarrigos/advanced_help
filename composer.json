@@ -16,5 +16,7 @@
     "irc": "irc://irc.freenode.org/drupal-contribute",
     "source": "https://cgit.drupalcode.org/advanced_help"
   },
-  "require": { }
+  "require": {
+    "michelf/php-markdown": "^1.7"
+  }
 }

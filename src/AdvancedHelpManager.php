@@ -230,11 +230,4 @@ class AdvancedHelpManager extends DefaultPluginManager {
     }
   }
 
-  /**
-   * Return true if the markdown filter is present.
-   * @return bool
-   */
-  public function isMarkdownFilterEnabled() {
-    return $this->module_handler->moduleExists('markdown');
-  }
 }

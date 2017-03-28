@@ -650,7 +650,6 @@ function advanced_help_view_topic($module, $topic, $popup = FALSE) {
       if ('md' == $ext && module_exists('markdown')) {
         $filters = module_invoke('markdown', 'filter_info');
         $md_info = $filters['filter_markdown'];
-	
         if (function_exists($md_info['process callback'])) {
           $function = $md_info['process callback'];
           $output = '<div class="advanced-help-topic">' . filter_xss_admin($function($output, NULL)) . '</div>';
@@ -664,14 +663,16 @@ function advanced_help_view_topic($module, $topic, $popup = FALSE) {
         if ('md' == $ext) {
           $readme .=
             '<p>' .
-	    t('If you install the !module module, the text below will be filtered by the module, producing rich text.',
-	    array('!module' => l(t('Markdown filter'),
-	    'https://www.drupal.org/project/markdown',
-	    array('attributes' => array('title' => t('Link to project.')))))) . '</p>';
-	}
+            t('If you install the !module module, the text below will be filtered by the module, producing rich text.',
+              array(
+                '!module' => l(t('Markdown filter'),
+                  'https://www.drupal.org/project/markdown',
+                  array('attributes' => array('title' => t('Link to project.'))))
+              )) . '</p>';
+        }
         $readme .=
           '<div class="advanced-help-topic"><pre class="readme">' . check_plain($output) . '</pre></div>';
-	$output = $readme;
+        $output = $readme;
       }
       return $output;
     }

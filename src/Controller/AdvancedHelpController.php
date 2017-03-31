@@ -223,7 +223,7 @@ class AdvancedHelpController extends ControllerBase {
     $pmodule = $module;
 
     // Loop checker.
-    $checked = array();
+    $checked = [];
     while (!empty($parent['parent'])) {
       if (strpos($parent['parent'], '%')) {
         list($pmodule, $ptopic) = explode('%', $parent['parent']);

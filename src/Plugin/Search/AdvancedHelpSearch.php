@@ -262,6 +262,6 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
         ->execute()
         ->fetchField();
     }
-    return array('remaining' => $total - $indexed, 'total' => $total);
+    return ['remaining' => $total - $indexed, 'total' => $total];
   }
 }

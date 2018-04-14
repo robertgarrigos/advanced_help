@@ -593,6 +593,16 @@ function advanced_help_get_topic_filename($module, $topic) {
     return "./$info[path]/$info[file]";
   }
 }
+
+/**
+ * Get the module type (theme or module).
+ */
+function _advanced_help_get_module_type($module) {
+  $theme_list = array_keys(list_themes());
+  $is_theme = in_array($module, $theme_list);
+  return $is_theme ? 'theme' : 'module';
+}
+
 /**
  * Load and render a help topic.
  */
@@ -605,11 +615,12 @@ function advanced_help_get_topic_file_info($module, $topic) {
   }
 
   // Search paths:
+  $module_type = _advanced_help_get_module_type($module);
   $paths = array(
     // Allow theme override.
     path_to_theme() . '/help',
     // Translations.
-    drupal_get_path('module', $module) . "/translations/help/$language->language",
+    drupal_get_path($module_type, $module) . "/translations/help/$language->language",
     // In same directory as .inc file.
     $info['path'],
   );

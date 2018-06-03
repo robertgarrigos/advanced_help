@@ -21,12 +21,22 @@
   padding: .4em;
 }
 
+/* #content h2 has higher specifity */
+.advanced-help-topic h1 {font-size: 2em;}
+#content .advanced-help-topic > h2 {font-size: 1.75em}
+.advanced-help-topic h3 {font-size: 1.5em;}
+.advanced-help-topic h4 {font-size: 1.4em;}
+.advanced-help-topic h5 {font-size: 1.25em;}
+.advanced-help-topic h6 {font-size: 1.1em;}
+
+.advanced-help-topic h1,
+.advanced-help-topic h2,
 .advanced-help-topic h3,
 .advanced-help-topic h4,
 .advanced-help-topic h5,
 .advanced-help-topic h6,
 .advanced-help-topic dt {
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .advanced-help-topic li h3,

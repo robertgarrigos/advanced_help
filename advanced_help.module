@@ -835,7 +835,6 @@ function _advanced_help_parse_ini() {
   if (!isset($ini)) {
     $ini = array('topics' => array(), 'settings' => array());
 
-    $help_path = drupal_get_path('module', 'advanced_help') . '/modules';
     foreach (array_merge(module_list(), list_themes()) as $plugin) {
       $module = is_string($plugin) ? $plugin : $plugin->name;
       $module_path = drupal_get_path(is_string($plugin) ? 'module' : 'theme', $module);
@@ -843,10 +842,6 @@ function _advanced_help_parse_ini() {
       if (file_exists("$module_path/help/$module.help.ini")) {
         $path = "$module_path/help";
         $info = parse_ini_file("./$module_path/help/$module.help.ini", TRUE);
-      }
-      elseif (file_exists("$help_path/$module/$module.help.ini")) {
-        $path = "$help_path/$module";
-        $info = parse_ini_file("./$help_path/$module/$module.help.ini", TRUE);
       }
       elseif (!file_exists("$module_path/help")) {
         // Look for one or more README files.

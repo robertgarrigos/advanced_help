@@ -35,19 +35,26 @@ use a more friendly name than appears in the project's .info file.</dd>
 module/theme index. It overrides the <code>name</code> setting above,
 as well as the project's name in its .info file.</dd>
 
+<dt><code>show readme</code> (FALSE)</dt>
+<dd>For projects that comes with a set of HTML-files, the default is
+to hide the project's <code>README</code>-file. Setting this TRUE will
+show the README along with the HTML-files.</dd>
+
 <dt><code>hide</code> (FALSE)</dt>
 <dd>This may be used to hide a module or theme in the module/theme
 index. This is particularly useful for modules who insert their help
-files into the hierarchy of another module or theme, as might be done
-by modules that extend <strong>Views</strong> or derived themes that
-extend base themes like <strong>Zen</strong>. By setting this to TRUE
-the project will not appear as its own entry.</dd>
+files into the hierarchy of another module or theme. By setting this
+to TRUE the project will not appear as its own entry.</dd>
+
 </dl>
 
 <p>Each section after that will correspond to a single help file for a
-single topic.  It starts with the topic name in square brackets
-(e.g. <code>[ini-file]</code>).  The following settings may be set for
-each file/topic, with the default value (if any) in brackets.</p>
+single topic.  It starts with the topic machine name in square
+brackets (e.g. <code>[introduction]</code>).  The file containing the
+documentation for that topic will have the same machine name with the
+extension <code>html</code> (e.g. <code>introduction.html</code>) The
+following settings may be set for each file/topic, with the default
+value (if any) in brackets.</p>
 
 <dl>
 <dt><code>title</code></dt>
@@ -68,8 +75,8 @@ are sorted alphabetically.</dd>
 <dt><code>parent</code></dt>
 <dd>The topic ID to use in a hierarchy; children will be listed
 beneath parents in the topic list, and will have the parent in their
-breadcrumb trail. You may parent this topic to a topic in another
-module or theme by using <code>module%topic</code>
+breadcrumb trail. You may parent this topic to a topic
+in <em>another</em> module or theme by using <code>module%topic</code>
 or <code>theme%topic</code> as the identifier,
 where <code>module</code> or <code>theme</code> is the project's short
 name. For example if parent is set to, '<code>views%display</code>',
@@ -93,25 +100,5 @@ will override any .css file added by the global settings.</dd>
 <dd>The height in pixels of the popup window.</dd>
 </dl>
 
-<p>For example, here is a version of the <code>advanced_help.help.ini</code> file:</p>
-
-<pre>
-[readme]
-title = README
-weight = -11
-
-[using-advanced-help]
-title = Using advanced help
-weight = -10
-
-[translation]
-title = Translating advanced help
-
-[ini-file]
-title = Help .ini file format
-line break = FALSE
-
-[why-advanced-help]
-title = Why advanced help?
-line break = TRUE
-</pre>
+<p>Take a look at the .ini-file for this project to see an
+example.</p>

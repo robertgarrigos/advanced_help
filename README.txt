@@ -6,6 +6,7 @@ CONTENTS OF THIS FILE
 * Recommended modules
 * Installation
 * Configuration
+* Support status
 * Maintainers
 
 
@@ -31,8 +32,7 @@ Advanced help hint:
   https://www.drupal.org/project/advanced_help_hint
   If Advanced help is not enabled, this module will generate a hint
   string that can be used in the project's hook_help to hint that
-  Advanced help should be
-  enabled.
+  Advanced help should be enabled.
 
 
 Installation
@@ -47,11 +47,31 @@ further information.
 Configuration
 -------------
 
-By itself, this module doesn't do much. The Advanced help assists
-other modules and themes in showing help texts. Nothing will show up
-until you enable at least one other module that makes use of the
-Advanced help framework or comes with a file named README.md or
-README.txt.
+There is no configuration.
+
+When you enable the module, you will have access to on-screen help,
+including README-files, created to tie in with the **Advanced help**
+framework.
+
+
+Support status
+--------------
+
+Reported bugs for the Drupal 7 branch will be fixed in a timely
+manner.  Older versions are no longer supported.
+
+Community support in the form of patches are very welcome for both
+Drupal 7 and Drupal 8 versions. For QA, the project needs community
+support in the form of reviews of patches, development versions and
+releases.
+
+The primary goal of the module is to remain light-weight and simple.
+This means that not all feature requests will be implemented, even if
+they are a good idea.  Feature requests accompanied by patches are
+more likely to make it into a release.
+
+The maintainer hopes that the community is willing to help out by
+answering &amp; closing support requests.
 
 
 Maintainers
@@ -64,4 +84,4 @@ amitgoyal  (5 commits)
 gisle (current maintainer, D7)
 gnuget (current maintainer, D8)
 
-This project has been sponsored by:Hannemyr Nye Medier AS
+This project has been sponsored by: Hannemyr Nye Medier AS

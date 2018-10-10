@@ -8,14 +8,21 @@ files are distributed from the project Drupal.org repo in the same
 package as the module or theme, and placed in a subdirectory named
 <code>help</code> in the project or theme directory.</p>
   
-<p>The help texts can be marked up with standard HTML. They will be
-rendered using your site's theme, but you may provide custom css.  If
-there is a <code>README.md</code> or <code>README.txt</code> in the
-package, the content of that file may be shown as well.</p>
-  
+<p>The help texts can be marked up with standard HTML.  The help pages
+will be rendered using your site's administrative theme.  Having a
+simple simple one-column, tableless, fluid width administration theme
+(e.g. <strong>Seven</strong>) is strongly recommended.</p>
+
+<p>You may attach custom css to a project that uses <strong>Advanced
+help</strong> to provide help.</p>
+
 <p>The help texts can be placed in an hierarchical book, allowing for
-top-down navigation, or placed in popups that can be added to a page
-with plain text links or themed icon links.</p>
+top-down navigation, or programmatically placed in popups that can be
+added to a page with plain text links or themed icon links.</p>
+
+<p>If there is a <code>README.md</code> or <code>README.txt</code> in
+the package, the content of that file may be shown as well.</p>
+  
 
 <p>Cross-linking book-sections,using fragment identifiers, works as
 one would expect.</p>
@@ -38,8 +45,11 @@ module
 
 <p>The project comes with a small demo module named
 <strong>Advanced help example</strong> to demonstrate how it works.
-For an example of a project that makes extensive use of the advanced
-help features, see the <strong>Views</strong> project.</p>
+This example also shows how to make use of some of the css classes
+provided.</p>
+
+<p>For an example of a project that makes extensive use of the
+advanced help features, see the <strong>Views</strong> project.</p>
 
 <p>For an example of translation of help text, see the
 directory <code>translations/help/nb</code> in the <strong>Advanced

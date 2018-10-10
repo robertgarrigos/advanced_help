@@ -50,6 +50,18 @@ function advanced_help_help($path, $arg) {
 }
 
 /**
+ * Implements hook_admin_paths().
+ *
+ * Force help pages for this modile to be rendered in admin theme.
+ */
+function advanced_help_admin_paths() {
+  $paths = array(
+    'help/advanced_help/*' => TRUE,
+  );
+  return $paths;
+}
+
+/**
  * Implements hook_menu().
  *
  * Strings in hook_menu() should not be run through t().
@@ -466,11 +478,13 @@ function advanced_help_get_module_name($module) {
  * Page callback to view a help topic.
  */
 function advanced_help_topic_page($module, $topic) {
+  if ('toc' == $topic) {
+    return advanced_help_index_page($module);
+  }
   $info = advanced_help_get_topic($module, $topic);
   if (!$info) {
     return drupal_not_found();
   }
-
   $popup = !empty($_GET['popup']) && user_access('view advanced help popup');
 
   drupal_set_title($info['title']);
@@ -556,9 +570,18 @@ function theme_advanced_help_topic($variables) {
   $topic  = $variables['topic'];
   $type   = $variables['type'];
 
-  $info = advanced_help_get_topic($module, $topic);
-  if (!$info) {
-    return;
+  if ('toc'  == $topic) {
+    $info = array(
+      'title' => 'Index page',
+      'popup width' => 500,
+      'popup height' => 500,
+    );
+  }
+  else {
+    $info = advanced_help_get_topic($module, $topic);
+    if (!$info) {
+      return;
+    }
   }
 
   switch ($type) {
@@ -669,7 +692,7 @@ function advanced_help_view_topic($module, $topic, $popup = FALSE) {
     $info = advanced_help_get_topic($module, $topic);
     $file = "./$file_info[path]/$file_info[file]";
 
-    // Fix invalid byte sequences (Issue #1330056).
+    // Fix invalid byte sequences (https://www.drupal.org/node/2659746).
     $output = file_get_contents($file);
     mb_substitute_character(0xfffd);
     $output = mb_convert_encoding($output, 'UTF-8', 'UTF-8');
@@ -1171,8 +1194,9 @@ function template_preprocess_advanced_help_popup(&$variables) {
   }
   // Closure should be filled last.
   // There has never been a theme hook for closure (going back to
-  // first release 2008-04-17).  Unable to figure out its purpose.
-  // $variables['closure']           = theme('closure');
+  // first release 2008-04-17), so it is always 0 bytes.
+  // Unable to figure out its purpose - commenting out.
+  // $variables['closure'] = theme('closure');
 }
 
 /**

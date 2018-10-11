@@ -8,14 +8,6 @@ files are distributed from the project Drupal.org repo in the same
 package as the module or theme, and placed in a subdirectory named
 <code>help</code> in the project or theme directory.</p>
   
-<p>The help texts can be marked up with standard HTML.  The help pages
-will be rendered using your site's administrative theme.  Having a
-simple simple one-column, tableless, fluid width administration theme
-(e.g. <strong>Seven</strong>) is strongly recommended.</p>
-
-<p>You may attach custom css to a project that uses <strong>Advanced
-help</strong> to provide help.</p>
-
 <p>The help texts can be placed in an hierarchical book, allowing for
 top-down navigation, or programmatically placed in popups that can be
 added to a page with plain text links or themed icon links.</p>
@@ -23,7 +15,6 @@ added to a page with plain text links or themed icon links.</p>
 <p>If there is a <code>README.md</code> or <code>README.txt</code> in
 the package, the content of that file may be shown as well.</p>
   
-
 <p>Cross-linking book-sections,using fragment identifiers, works as
 one would expect.</p>
 
@@ -40,8 +31,7 @@ project's hierarchy.</p>
 module
 <a href="https://www.drupal.org/project/advanced_help_hint"><strong>Advanced help hint</strong></a>.</p>
 
-
-<h2 id="demo">Demonstrations</h2>
+<h2 id="demo">Demonstration</h2>
 
 <p>The project comes with a small demo module named
 <strong>Advanced help example</strong> to demonstrate how it works.
@@ -55,4 +45,32 @@ advanced help features, see the <strong>Views</strong> project.</p>
 directory <code>translations/help/nb</code> in the <strong>Advanced
 help example</strong> submodule. For translation instructions, see the
 section named “<a href="&topic:advanced_help/translation&">Translating
-    advanced help</a>”.</p>
+advanced help</a>”.</p>
+
+<h2 id="theme">Theme</h2>
+
+<p>The <strong>Advanced help</strong> and
+<strong>Advanced help example</strong> modules implements
+<code>hook_admin_paths_alter()</code> to render the help
+texts rendered using the site's administrative theme.
+The <code>help.css</code> provided is created with the
+theme <strong>Seven</strong> in mind.  Using a different
+administrative theme may require you to create custom css for the
+site.</p>
+
+<p>The contributed module
+<a href="https://www.drupal.org/project/admin_path"><strong>Administrative pages</strong></a>
+seems to override <code>hook_admin_paths_alter()</code>.  If you use this module,
+you also need to navigate to
+<span class="nav">Configuration » User interface » Administrative pages</span>
+and declare these paths as administrative pages:</p>
+
+<pre>
+help/advanced_help/*
+help/help_example/*
+</pre>
+
+<p>You may attach your own custom css to any project that
+uses <strong>Advanced help</strong> to provide help.</p>
+
+

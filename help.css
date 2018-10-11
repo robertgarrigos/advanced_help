@@ -52,6 +52,11 @@
   padding: .5em;
 }
 
+.nav {
+  color: #093;
+  background: #f6f6f6;
+  font-family: Arial Narrow, Arial, sans-serif;
+}
 .attribution {
   font-size: 0.8em;
   color: #aaa;

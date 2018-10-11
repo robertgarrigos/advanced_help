@@ -50,15 +50,12 @@ function advanced_help_help($path, $arg) {
 }
 
 /**
- * Implements hook_admin_paths().
+ * Implements hook_admin_paths_alter().
  *
- * Force help pages for this modile to be rendered in admin theme.
+ * Force help pages for this module to be rendered in admin theme.
  */
-function advanced_help_admin_paths() {
-  $paths = array(
-    'help/advanced_help/*' => TRUE,
-  );
-  return $paths;
+function advanced_help_admin_paths_alter(&$paths) {
+  $paths['help/advanced_help/*'] = TRUE;
 }
 
 /**

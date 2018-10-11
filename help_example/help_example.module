@@ -5,15 +5,12 @@
  */
 
 /**
- * Implements hook_admin_paths().
+ * Implements hook_admin_paths_alter().
  *
- * Force help pages for this modile to be rendered in admin theme.
+ * Force help pages for this module to be rendered in admin theme.
  */
-function help_example_admin_paths() {
-  $paths = array(
-    'help/help_example/*' => TRUE,
-  );
-  return $paths;
+function help_example_admin_paths_alter(&$paths) {
+  $paths['help/help_example/*'] = TRUE;
 }
 
 /**

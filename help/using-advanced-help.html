@@ -67,10 +67,11 @@ named parameters passed in an array:</p>
 
 <ol>  
 <li><code>'module'</code>: The machine name of the module that owns this help topic.</li>
-<li><code>'topic'</code>: The identifier for the topic.</li>
+<li><code>'topic'</code>: The identifier for the topic (to link to topic) or <code>'toc'</code> (to link to index page).</li>
+</ul></li>
 <li><code>'type'</code>: The type of link to create:<ul>
-  <li>'<code>icon'</code> to display the question mark icon</li>
-  <li>'<code>title'</code> to display the topic's title</li>
+  <li>'<code>icon'</code> to display the question mark icon.</li>
+  <li>'<code>title'</code> to display the topic's title.</li>
   <li>any other text to display the text. Wrap it in <code>t()</code> to make it translatable.</li>
 </ul></li>
 </ol>  
@@ -112,6 +113,9 @@ $output .= '&nbsp;' . t('Click the help icon!');
 <div class="help-img-caption" style="max-width:180px">Question mark help icon</div>
 </div>
 
+<p>See the source code of demo module <strong>Advanced help
+example</strong> for link examples.</p>
+
 <p>You may link to other help topics inside your HTML help file using
 this format:</p>
 
@@ -146,14 +150,14 @@ to <code>href=""</code> and <code>src=""</code> parameters.</p>
 
 <p>When this module is installed, users with the
 <code>view advanced help index</code>
-permission can access the advanced help index by going to
-<em>Administer » Advanced Help</em>
-(<code>admin/advanced_help</code>). Additional permissions
+permission can access the advanced help index by navigating to
+<span class="nav">Help » Advanced Help</span>.
+Additional permissions
 <code>view advanced help topic</code>  and
 <code>view advanced help popup</code> allows the user to click
 trough to the actual help pages and popups.</p>
 
-<p>By taking away thes permissions from a role, a site can “hide” the
+<p>By taking away these permissions from a role, a site can “hide” the
 direct access to these topics and popup.  Note that this does not
 restrict <em>access</em>, as the contents of an unprotected HTML-file
 on a Drupal website can be viewed by anyone who know (or is able to
@@ -180,7 +184,7 @@ protection from direct access.</p>
 <h2 id="search">Search</h2>
 
 <p>To enable advanced help search, navigate to
-<em>Administration » Configuration » Search and metadata » Search settings</em>.
+<span class="nav">Administration » Configuration » Search and metadata » Search settings</span>.
 Scroll down to <em>Active search modules</em> and tick the box to the
 left of “Advanced help”.  The search form will appear on the top of
 the advanced help index pages.</p>
@@ -188,6 +192,6 @@ the advanced help index pages.</p>
 <p>If the core <strong>Search</strong> module is enabled, the contents
 of the advanced help framework will be indexed on cron. If you enable
 new modules or themes and wish to immediately index their help text,
-navigate to <em>Administration » Reports » Status report</em> and
-  click the link “run cron manually”.</p>
+navigate to <span class="nav">Reports » Status report</span> and
+click the link “run cron manually”.</p>
 

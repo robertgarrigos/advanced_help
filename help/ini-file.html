@@ -1,16 +1,17 @@
 <p>The advanced help configuration file is in simple .ini file format.
 It has an optional section for global settings that might be inherited
-for each help file, followed by sections for each help file.</p>
+for each help topic, followed by sections for each topic.</p>
 
-<p>Global settings may be put into a section named <code>[advanced help
-settings]</code>.  This means that this name is reserved and it cannot
-be a help file in any module or theme. The following settings may be
-set in this section, with the default value (if any) in brackets.</p>
+<p>Global settings may be put into a section named <code>[advanced
+help settings]</code>.  This means that this name is reserved and it
+cannot be a topic in any module or theme. The following settings may
+be set in this section, with the default value (if any) in
+brackets.</p>
 
 <dl>
 <dt><code>line break</code> (FALSE)</dt>
-<dd>If set, the line break filter will be applied to all help files
-defined by this module or theme, unless that help file specifically is
+<dd>If set, the line break filter will be applied to all help topics
+defined by this module or theme, unless that topic specifically is
 set otherwise.  The line break converts line breaks
 into <code>br</code> and <code>p</code> tags automatically.</dd>
 
@@ -19,7 +20,7 @@ into <code>br</code> and <code>p</code> tags automatically.</dd>
 <em>previous topic</em>, Up (parent), <em>next topic</em>.</dd>
 
 <dt><code>css</code></dt>
-<dd>Specify a css file that will be used for all help files (unless
+<dd>Specify a css file that will be used for all topics (unless
 overridden), including the .css extension. This .css file must reside
 in the help directory along with the .html files, and will not be
 affected by translation.</dd>
@@ -42,9 +43,9 @@ show the README along with the HTML-files.</dd>
 
 <dt><code>hide</code> (FALSE)</dt>
 <dd>This may be used to hide a module or theme in the module/theme
-index. This is particularly useful for modules who insert their help
-files into the hierarchy of another module or theme. By setting this
-to TRUE the project will not appear as its own entry.</dd>
+index. This is particularly useful for modules who insert their topics
+into the hierarchy of another module or theme. By setting this to TRUE
+the project will not appear as its own entry.</dd>
 
 </dl>
 
@@ -82,6 +83,12 @@ where <code>module</code> or <code>theme</code> is the project's short
 name. For example if parent is set to, '<code>views%display</code>',
 the topic will be regarded as a child of the
 <code>display</code> topic in the <strong>Views</strong> module.</dd>
+
+<dt><code>format</code></dt>
+<dd>Run topic through this text format (use the format's machine
+name).  For example: To convert line breaks into <code>br</code>
+and <code>p</code> tags automatically, use the <code>full_html</code>
+format.</dd>
 
 <dt><code>line break</code></dt>
 <dd>Set the line break filter for this topic. Set to FALSE to disable

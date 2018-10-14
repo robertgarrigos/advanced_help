@@ -765,6 +765,15 @@ function advanced_help_view_topic($module, $topic, $popup = FALSE) {
 
       $output = _filter_autop($output);
     }
+    if (!empty($info['ini']['format'])) {
+      $filter = $info['ini']['format'];
+      if (filter_format_exists($filter)) {
+        $output = check_markup($output, $filter);
+      }
+      else {
+        drupal_set_message(t('Ini-file request non-existing format: “!format”.', array('!format' => $filter)), 'error');
+      }
+    }
 
     if (!empty($info['navigation'])) {
       $topics = advanced_help_get_topics();

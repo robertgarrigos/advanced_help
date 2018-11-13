@@ -38,6 +38,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
 
   /**
    * Get the modules/theme list.
+   *
    * @todo cache
    */
   public function getModuleList() {
@@ -58,11 +59,13 @@ class AdvancedHelpManager extends DefaultPluginManager {
 
   /**
    * Get the information for a single help topic.
+   *
    * @param $module
    * @param $topic
+   *
    * @return string|bool
    */
-  function getTopic($module, $topic) {
+  public function getTopic($module, $topic) {
     $topics = $this->getTopics();
     if (!empty($topics[$module][$topic])) {
       return $topics[$module][$topic];
@@ -72,15 +75,18 @@ class AdvancedHelpManager extends DefaultPluginManager {
 
   /**
    * Return the name of the module.
+   *
    * @param string $module
+   *
    * @return string
    */
-  function getModuleName($module) {
+  public function getModuleName($module) {
     return $this->module_handler->getName($module);
   }
 
   /**
    * Search the system for all available help topics.
+   *
    * @todo check visibility of the method.
    */
   public function getTopics() {
@@ -90,13 +96,13 @@ class AdvancedHelpManager extends DefaultPluginManager {
 
   /**
    * Returns advanced help settings.
+   *
    * @todo check visibility of the method.
    */
   public function getSettings() {
     $ini = $this->parseHelp();
     return $ini['settings'];
   }
-
 
   /**
    * Function to parse yml / txt files.
@@ -123,7 +129,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
 
         if (file_exists("$module_path/help/$module.help.yml")) {
           $path = "$module_path/help";
-          $info =  Yaml::decode(file_get_contents("$module_path/help/$module.help.yml"));
+          $info = Yaml::decode(file_get_contents("$module_path/help/$module.help.yml"));
         }
         elseif (!file_exists("$module_path/help")) {
           // Look for one or more README files.
@@ -186,7 +192,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
           }
         }
       }
-      // drupal_alter('advanced_help_topic_info', $ini);
+      // drupal_alter('advanced_help_topic_info', $ini);.
       $this->cacheSet('advanced_help_ini_' . $language, $ini);
     }
     return $ini;
@@ -196,10 +202,11 @@ class AdvancedHelpManager extends DefaultPluginManager {
    * Load and render a help topic.
    *
    * @todo allow the theme override the help.
-   * @param $module.
-   * @param $topic.
-   * @return array.
-  */
+   * @param $module
+   * @param $topic
+   *
+   * @return array
+   */
   public function getTopicFileInfo($module, $topic) {
     $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
@@ -211,8 +218,8 @@ class AdvancedHelpManager extends DefaultPluginManager {
     $path_type = (preg_match('/themes/', $info['path'])) ? 'theme' : 'module';
     // Search paths:
     $paths = [
-//      // Allow theme override.
-//      path_to_theme() . '/help',
+    // // Allow theme override.
+    //      path_to_theme() . '/help',
       // Translations.
       drupal_get_path($path_type, $module) . "/translations/help/$language",
       // In same directory as .inc file.
@@ -228,6 +235,9 @@ class AdvancedHelpManager extends DefaultPluginManager {
     return FALSE;
   }
 
+  /**
+   *
+   */
   public function getTopicFileName($module, $topic) {
     $info = $this->getTopicFileInfo($module, $topic);
     if ($info) {

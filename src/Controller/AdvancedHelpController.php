@@ -3,7 +3,6 @@
 namespace Drupal\advanced_help\Controller;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -27,7 +26,9 @@ class AdvancedHelpController extends ControllerBase {
    */
   private $advanced_help;
 
-
+  /**
+   *
+   */
   public function __construct(PluginManagerInterface $advanced_help) {
     $this->advanced_help = $advanced_help;
   }
@@ -45,6 +46,7 @@ class AdvancedHelpController extends ControllerBase {
    * Content.
    *
    * @todo Implement search integration.
+   *
    * @return array
    *   Returns module index.
    */
@@ -77,15 +79,16 @@ class AdvancedHelpController extends ControllerBase {
         '#theme' => 'item_list',
         '#items' => $items,
         '#title' => $this->t('Module help index'),
-      ]
+      ],
     ];
   }
 
   /**
    * Build a hierarchy for a single module's topics.
    *
-   * @param $topics array.
-   * @return array.
+   * @param array $topics
+   *
+   * @return array
    */
   private function getTopicHierarchy($topics) {
     foreach ($topics as $module => $module_topics) {
@@ -126,8 +129,10 @@ class AdvancedHelpController extends ControllerBase {
 
   /**
    * Helper function to sort topics.
+   *
    * @param string $id_a
    * @param string $id_b
+   *
    * @return mixed
    */
   private function helpUasort($id_a, $id_b) {
@@ -183,7 +188,9 @@ class AdvancedHelpController extends ControllerBase {
     return $items;
   }
 
-
+  /**
+   *
+   */
   public function moduleIndex($module) {
     $topics = $this->advanced_help->getTopics();
 
@@ -198,20 +205,25 @@ class AdvancedHelpController extends ControllerBase {
       'index' => [
         '#theme' => 'item_list',
         '#items' => $items,
-      ]
+      ],
     ];
   }
 
   /**
    * Set the name of the module in the index page.
    *
-   * @param string $module Module name
+   * @param string $module
+   *   Module name.
+   *
    * @return string
    */
   public function moduleIndexTitle($module) {
     return $this->advanced_help->getModuleName($module) . ' help index';
   }
 
+  /**
+   *
+   */
   public function topicPage(Request $request, $module, $topic) {
     $is_modal = ($request->query->get(MainContentViewSubscriber::WRAPPER_FORMAT) === 'drupal_modal');
     $info = $this->advanced_help->getTopic($module, $topic);
@@ -253,19 +265,20 @@ class AdvancedHelpController extends ControllerBase {
     return $build;
   }
 
-    /**
+  /**
    * Load and render a help topic.
    *
    * @param string $module
    *   Name of the module.
    * @param string $topic
    *   Name of the topic.
+   *
    * @todo port the drupal_alter functionality.
    *
    * @return string
    *   Returns formatted topic.
    */
-  public function viewTopic($module, $topic, $is_modal = false) {
+  public function viewTopic($module, $topic, $is_modal = FALSE) {
     $file_info = $this->advanced_help->getTopicFileInfo($module, $topic);
     if ($file_info) {
       $info = $this->advanced_help->getTopic($module, $topic);
@@ -321,7 +334,7 @@ class AdvancedHelpController extends ControllerBase {
           $items = $this->getTree($topics, $topics[$module][$topic]['children']);
           $links = [
             '#theme' => 'item_list',
-            '#items' => $items
+            '#items' => $items,
           ];
           $build['#markup'] .= \Drupal::service('renderer')->render($links, FALSE);
         }
@@ -370,15 +383,17 @@ class AdvancedHelpController extends ControllerBase {
         }
       }
       $build['#markup'] = '<div class="advanced-help-topic">' . $build['#markup'] . '</div>';
-//      drupal_alter('advanced_help_topic', $output, $popup);
+      // drupal_alter('advanced_help_topic', $output, $popup);.
       return $build;
     }
   }
 
   /**
    * Set the title of the topic.
+   *
    * @param $module
    * @param $topic
+   *
    * @return string
    */
   public function topicPageTitle($module, $topic) {
@@ -388,4 +403,5 @@ class AdvancedHelpController extends ControllerBase {
     }
     return $info['title'];
   }
+
 }

@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @file
+ */
+
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Serialization\Json;
 
@@ -32,8 +37,8 @@ function advanced_help_theme() {
         'module' => NULL,
         'topic'  => NULL,
         'type'   => 'icon',
-      ]
-    ]
+      ],
+    ],
   ];
 }
 

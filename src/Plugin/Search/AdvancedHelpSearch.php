@@ -38,6 +38,7 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
 
   /**
    * Advanced Help Manager.
+   *
    * @var \Drupal\advanced_help\AdvancedHelpManager
    */
   protected $advancedHelp;
@@ -49,11 +50,10 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
    */
   protected $searchSettings;
 
-
   /**
    * {@inheritdoc}
    */
-  static public function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $container->get('database'),
       $container->get('plugin.manager.advanced_help'),
@@ -68,7 +68,7 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
   /**
    * Creates a UserSearch object.
    *
-   * @param Connection $database
+   * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    * @param \Drupal\advanced_help\AdvancedHelpManager $advanced_help
    *   The advanced Help manager.
@@ -92,6 +92,9 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
     $this->addCacheTags(['user_list']);
   }
 
+  /**
+   *
+   */
   public function access($operation = 'view', AccountInterface $account = NULL, $return_as_object = FALSE) {
     $result = AccessResult::allowedIf(!empty($account) && $account->hasPermission('access user profiles'))->cachePerPermissions();
     return $return_as_object ? $result : $result->isAllowed();
@@ -102,7 +105,9 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
    *
    * Get or create an sid (search id) that correlates to each topic for
    * the search system.
+   *
    * @param array $topics
+   *
    * @return array
    */
   private function getSids($topics) {
@@ -169,7 +174,7 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
   public function updateIndex() {
     // Interpret the cron limit setting as the maximum number of nodes to index
     // per cron run.
-    $limit = (int)$this->searchSettings->get('index.cron_limit');
+    $limit = (int) $this->searchSettings->get('index.cron_limit');
     $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
     $topics = $this->getSids($this->advancedHelp->getTopics());
 
@@ -189,7 +194,7 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
           continue;
         }
 
-        //If we've been looking to catch up, and we have, reset so we
+        // If we've been looking to catch up, and we have, reset so we
         // stop fast forwarding.
         if (!empty($last['module'])) {
           unset($last['topic']);
@@ -203,7 +208,7 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
               ->fields([
                 'module' => $module,
                 'topic' => $topic,
-                'langcode' => $language
+                'langcode' => $language,
               ])
               ->execute();
           }
@@ -264,4 +269,5 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
     }
     return ['remaining' => $total - $indexed, 'total' => $total];
   }
+
 }

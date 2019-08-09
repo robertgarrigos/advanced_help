@@ -7,6 +7,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Michelf\MarkdownExtra;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,7 +71,7 @@ class AdvancedHelpController extends ControllerBase {
         else {
           $name = $this->t($module_name);
         }
-        $items[] = $this->l($name, new Url('advanced_help.module_index', ['module' => $module]));
+        $items[] = Link::fromTextAndUrl($name, Url::fromRoute('advanced_help.module_index', ['module' => $module]));
       }
     }
 
@@ -174,7 +175,7 @@ class AdvancedHelpController extends ControllerBase {
     $items = [];
     foreach ($topic_ids as $info) {
       list($module, $topic) = $info;
-      $item = $this->l($topics[$module][$topic]['title'], new Url('advanced_help.help', ['module' => $module, 'topic' => $topic]));
+      $item = Link::fromTextAndUrl($topics[$module][$topic]['title'], Url::fromRoute('advanced_help.help', ['module' => $module, 'topic' => $topic]));
       if (!empty($topics[$module][$topic]['children']) && ($max_depth == -1 || $depth < $max_depth)) {
         $link = [
           '#theme' => 'item_list',
@@ -369,13 +370,13 @@ class AdvancedHelpController extends ControllerBase {
           $navigation = '<div class="help-navigation clear-block">';
 
           if ($prev) {
-            $navigation .= $this->l('«« ' . $topics[$prev[0]][$prev[1]]['title'], new Url('advanced_help.help', ['module' => $prev[0], 'topic' => $prev[1]], ['attributes' => ['class' => 'help-left']]));
+            $navigation .= Link::fromTextAndUrl('«« ' . $topics[$prev[0]][$prev[1]]['title'], Url::fromRoute('advanced_help.help', ['module' => $prev[0], 'topic' => $prev[1]], ['attributes' => ['class' => 'help-left']]))->toString();
           }
           if ($up) {
-            $navigation .= $this->l($this->t('Up'), $up->setOption('attributes', ['class' => ($prev) ? 'help-up' : 'help-up-noleft']));
+            $navigation .= Link::fromTextAndUrl($this->t('Up'), $up->setOption('attributes', ['class' => ($prev) ? 'help-up' : 'help-up-noleft']))->toString();
           }
           if ($next) {
-            $navigation .= $this->l($topics[$next[0]][$next[1]]['title'] . ' »»', new Url('advanced_help.help', ['module' => $next[0], 'topic' => $next[1]], ['attributes' => ['class' => 'help-right']]));
+            $navigation .= Link::fromTextAndUrl($topics[$next[0]][$next[1]]['title'] . ' »»', Url::fromRoute('advanced_help.help', ['module' => $next[0], 'topic' => $next[1]], ['attributes' => ['class' => 'help-right']]))->toString();
           }
 
           $navigation .= '</div>';

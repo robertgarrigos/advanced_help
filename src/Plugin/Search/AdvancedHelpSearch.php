@@ -11,6 +11,7 @@ use Drupal\advanced_help\AdvancedHelpManager;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use Drupal\Core\Config\Config;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\search\SearchIndexInterface;
 
 /**
  * Executes a keyword search for Advanced Help against the {advanced_help} topic pages.
@@ -51,10 +52,17 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
   protected $searchSettings;
 
   /**
+   * The search index.
+   *
+   * @var \Drupal\search\SearchIndexInterface
+   */
+  protected $searchIndex;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
+    $instance = new static(
       $container->get('database'),
       $container->get('plugin.manager.advanced_help'),
       $container->get('current_user'),
@@ -63,6 +71,12 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
       $plugin_id,
       $plugin_definition
     );
+
+    // The search Index service does not exist on Drupal 8.7 and below.
+    if (floatval(\Drupal::VERSION) >= 8.8) {
+      $instance->searchIndex = $container->get('search.index');
+    }
+    return $instance;
   }
 
   /**
@@ -215,7 +229,12 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
         }
 
         // Update index, using search index "type" equal to the plugin ID.
-        search_index($this->getPluginId(), $info['sid'], $language, file_get_contents($file));
+        if (floatval(\Drupal::VERSION) >= 8.8) {
+          $this->searchIndex->index($this->getPluginId(), $info['sid'], $language, file_get_contents($file));
+        }
+        else {
+          search_index($this->getPluginId(), $info['sid'], $language, file_get_contents($file));
+        }
         $count++;
         if ($count >= $limit) {
           $last['module'] = $module;
@@ -232,14 +251,24 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
    * {@inheritdoc}
    */
   public function indexClear() {
-    search_index_clear($this->getPluginId());
+    if (floatval(\Drupal::VERSION) >= 8.8) {
+      $this->searchIndex->clear($this->getPluginId());
+    }
+    else {
+      search_index_clear($this->getPluginId());
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function markForReindex() {
-    search_mark_for_reindex($this->getPluginId());
+    if (floatval(\Drupal::VERSION) >= 8.8) {
+      $this->searchIndex->markForReindex($this->getPluginId());
+    }
+    else {
+      search_mark_for_reindex($this->getPluginId());
+    }
   }
 
   /**

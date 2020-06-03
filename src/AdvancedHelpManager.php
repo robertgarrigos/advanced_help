@@ -9,12 +9,20 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\File\FileSystemInterface;
 
 /**
  * AdvancedHelp plugin manager.
  */
 class AdvancedHelpManager extends DefaultPluginManager {
   use StringTranslationTrait;
+
+  /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
 
   /**
    * Constructs an AdvancedHelpManager instance.
@@ -27,13 +35,16 @@ class AdvancedHelpManager extends DefaultPluginManager {
    *   Theme handler.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file handler.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend, TranslationInterface $string_translation) {
+  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend, TranslationInterface $string_translation, FileSystemInterface $file_system) {
     $this->module_handler = $module_handler;
     $this->theme_handler = $theme_handler;
     $this->setStringTranslation($string_translation);
     $this->alterInfo('advanced_help');
     $this->setCacheBackend($cache_backend, 'advanced_help', ['advanced_help']);
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -133,8 +144,14 @@ class AdvancedHelpManager extends DefaultPluginManager {
         }
         elseif (!file_exists("$module_path/help")) {
           // Look for one or more README files.
-          $files = file_scan_directory("./$module_path",
-            '/^(readme).*\.(txt|md)$/i', ['recurse' => FALSE]);
+          if (floatval(\Drupal::VERSION) >= 8.8) {
+            $files = $this->fileSystem->scanDirectory("./$module_path",
+              '/^(readme).*\.(txt|md)$/i', ['recurse' => FALSE]);
+          }
+          else {
+            $files = file_scan_directory("./$module_path",
+              '/^(readme).*\.(txt|md)$/i', ['recurse' => FALSE]);
+          }
           $path = "./$module_path";
           foreach ($files as $name => $fileinfo) {
             $info[$fileinfo->filename] = [

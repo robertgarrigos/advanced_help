@@ -3,7 +3,6 @@ CONTENTS OF THIS FILE
 
 * Introduction
 * Requirements
-* Recommended modules
 * Installation
 * Configuration
 * Maintainers
@@ -18,7 +17,8 @@ framework that allows module and theme developers to integrate help texts in a
 Drupal site, as well as exposing help to site administrators through the
 administrative interface.
 
-* For a full description of the module visit https://www.drupal.org/node/2461741
+* For a full description of the module visit
+  https://www.drupal.org/project/advanced_help
 
 * To submit bug reports and feature suggestions, or to track changes visit
   https://www.drupal.org/project/issues/advanced_help
@@ -27,23 +27,15 @@ administrative interface.
 REQUIREMENTS
 ------------
 
-This module has no required dependencies outside of Drupal core.
-
-
-RECOMMENDED MODULES
--------------------
-
-* Advanced Help Hint (https://www.drupal.org/project/advanced_help_hint):
-  If Advanced Help is not enabled, this module will generate a hint string that
-  can be used in the project's hook_help to hint that Advanced Help should be
-  enabled.
+The project's requirements can be found in the project's composer.json.
 
 
 INSTALLATION
 ------------
 
-Install the Advanced Help module as you would normally install a contributed
-Drupal module. Visit https://www.drupal.org/node/895232 for more information.
+You must use composer to install the 8.x-1.x branch of the
+project. The exact command line is displayed on the project page,
+along with the release.
 
 
 CONFIGURATION
@@ -58,4 +50,5 @@ README.md or README.txt.
 MAINTAINERS
 -----------
 
+* Gisle Hannemyr - https://www.drupal.org/u/gisle
 * David Valdez - https://www.drupal.org/u/gnuget

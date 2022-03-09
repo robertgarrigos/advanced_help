@@ -223,7 +223,7 @@ class AdvancedHelpController extends ControllerBase {
   }
 
   /**
-   *
+   * Load and render an README.md or README.txt help topic.
    */
   public function topicPage(Request $request, $module, $topic) {
     $is_modal = ($request->query->get(MainContentViewSubscriber::WRAPPER_FORMAT) === 'drupal_modal');
@@ -263,11 +263,16 @@ class AdvancedHelpController extends ControllerBase {
       $build['#markup'] = $this->t('Missing help topic.');
     }
     $build['#attached']['library'][] = 'advanced_help/help';
+    $topicfile =$request->attributes->get('topic');
+    $txt = strpos($topicfile, 'txt');
+    if ($txt) {
+      $build['#markup'] = '<pre>' .$build['#markup'] . '</pre>';
+    }
     return $build;
   }
 
   /**
-   * Load and render a help topic.
+   * Load and render an Advanced Help help topic.
    *
    * @param string $module
    *   Name of the module.

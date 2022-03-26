@@ -72,10 +72,7 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
       $plugin_definition
     );
 
-    // The search Index service does not exist on Drupal 8.7 and below.
-    if (floatval(\Drupal::VERSION) >= 8.8) {
-      $instance->searchIndex = $container->get('search.index');
-    }
+    $instance->searchIndex = $container->get('search.index');
     return $instance;
   }
 
@@ -229,12 +226,7 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
         }
 
         // Update index, using search index "type" equal to the plugin ID.
-        if (floatval(\Drupal::VERSION) >= 8.8) {
-          $this->searchIndex->index($this->getPluginId(), $info['sid'], $language, file_get_contents($file));
-        }
-        else {
-          search_index($this->getPluginId(), $info['sid'], $language, file_get_contents($file));
-        }
+        $this->searchIndex->index($this->getPluginId(), $info['sid'], $language, file_get_contents($file));
         $count++;
         if ($count >= $limit) {
           $last['module'] = $module;
@@ -251,24 +243,14 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
    * {@inheritdoc}
    */
   public function indexClear() {
-    if (floatval(\Drupal::VERSION) >= 8.8) {
-      $this->searchIndex->clear($this->getPluginId());
-    }
-    else {
-      search_index_clear($this->getPluginId());
-    }
+    $this->searchIndex->clear($this->getPluginId());
   }
 
   /**
    * {@inheritdoc}
    */
   public function markForReindex() {
-    if (floatval(\Drupal::VERSION) >= 8.8) {
-      $this->searchIndex->markForReindex($this->getPluginId());
-    }
-    else {
-      search_mark_for_reindex($this->getPluginId());
-    }
+    $this->searchIndex->markForReindex($this->getPluginId());
   }
 
   /**

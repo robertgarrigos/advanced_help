@@ -219,7 +219,7 @@ class AdvancedHelpController extends ControllerBase {
    * @return string
    */
   public function moduleIndexTitle($module) {
-    return $this->advanced_help->getModuleName($module) . ' help index';
+    return $this->advanced_help->getProjectName($module) . ' help index';
   }
 
   /**
@@ -264,7 +264,7 @@ class AdvancedHelpController extends ControllerBase {
     }
     $build['#attached']['library'][] = 'advanced_help/help';
     $topicfile =$request->attributes->get('topic');
-    $txt = strpos($topicfile, 'txt');
+    $txt = strpos($info['file name'], 'txt');
     if ($txt) {
       $build['#markup'] = '<pre>' .$build['#markup'] . '</pre>';
     }
@@ -286,9 +286,10 @@ class AdvancedHelpController extends ControllerBase {
    */
   public function viewTopic($module, $topic, $is_modal = FALSE) {
     $file_info = $this->advanced_help->getTopicFileInfo($module, $topic);
+
     if ($file_info) {
       $info = $this->advanced_help->getTopic($module, $topic);
-      $file = "{$file_info['path']}/{$file_info['file']}";
+      $file = $file_info['path'] . '/' . $file_info['file'];
       $build = [
         '#type' => 'markup',
       ];
@@ -298,13 +299,11 @@ class AdvancedHelpController extends ControllerBase {
       }
 
       $build['#markup'] = file_get_contents($file);
-      if (isset($info['readme file']) && $info['readme file']) {
-        $ext = pathinfo($file, PATHINFO_EXTENSION);
-        if ('md' == $ext) {
-          $build['#markup'] = '<div class="advanced-help-topic">' . Xss::filterAdmin(MarkdownExtra::defaultTransform($build['#markup'])) . '</div>';
-        }
-        return $build;
+      $ext = pathinfo($file, PATHINFO_EXTENSION);
+      if ('md' == $ext) {
+        $build['#markup'] = '<div class="advanced-help-topic">' . Xss::filterAdmin(MarkdownExtra::defaultTransform($build['#markup'])) . '</div>';
       }
+      return $build;
 
       // Change 'topic:' to the URL for another help topic.
       preg_match('/&topic:([^"]+)&/', $build['#markup'], $matches);

@@ -38,6 +38,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file handler.
    */
+
   public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend, TranslationInterface $string_translation, FileSystemInterface $file_system) {
     $this->module_handler = $module_handler;
     $this->theme_handler = $theme_handler;
@@ -91,7 +92,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
    *
    * @return string
    */
-  public function getModuleName($module) {
+  public function getProjectName($module) {
     return $this->module_handler->getName($module);
   }
 
@@ -138,28 +139,23 @@ class AdvancedHelpManager extends DefaultPluginManager {
         $module_path = $extension->getPath();
         $info = [];
 
-        if (file_exists("$module_path/help/$module.help.yml")) {
-          $path = "$module_path/help";
-          $info = Yaml::decode(file_get_contents("$module_path/help/$module.help.yml"));
+        // Full Advanced Help help text
+        if (file_exists($module_path . '/help/' . $module . '.help.yml')) {
+          $path = $module_path . '/help';
+          $info = Yaml::decode(file_get_contents($module_path . '/help/' . $module . '.help.yml'));
         }
-        elseif (!file_exists("$module_path/help")) {
+        elseif (!file_exists($module_path . '/help')) {
           // Look for one or more README files.
-          if (floatval(\Drupal::VERSION) >= 8.8) {
-            $files = $this->fileSystem->scanDirectory("./$module_path",
-              '/^(readme).*\.(txt|md)$/i', ['recurse' => FALSE]);
-          }
-          else {
-            $files = file_scan_directory("./$module_path",
-              '/^(readme).*\.(txt|md)$/i', ['recurse' => FALSE]);
-          }
-          $path = "./$module_path";
+          $files = $this->fileSystem->scanDirectory('./' . $module_path,
+            '/^(readme).*\.(txt|md)$/i', ['recurse' => FALSE]);
+          $path = $module_path;
           foreach ($files as $name => $fileinfo) {
             $info[$fileinfo->filename] = [
               'line break' => TRUE,
-              'readme file' => TRUE,
               'file' => $fileinfo->filename,
               'title' => $fileinfo->name,
             ];
+	    // $info['path'] = $path;
           }
         }
 
@@ -186,8 +182,28 @@ class AdvancedHelpManager extends DefaultPluginManager {
           }
 
           foreach ($info as $name => $topic) {
-            // Each topic should have a name, a title, a file and path.
+
+            // Each topic should have a name, a title, a path and a filename.
             $file = !empty($topic['file']) ? $topic['file'] : $name;
+
+            $fname = $path . '/' . $file;
+
+            if (file_exists($fname)) {
+              $file_name = $file;
+	    }
+            elseif (file_exists($fname . '.html')) {
+              $file_name = $file . '.html';
+	    }
+	    elseif (file_exists($fname . '.md')) {
+              $file_name = $file . '.md';
+	    }
+	    elseif  (file_exists($fname . '.txt')) {
+              $file_name = $file . '.txt';
+            }
+	    else {
+              $file_name = 'MISSING';
+	    }
+
             $ini['topics'][$module][$name] = [
               'name' => $name,
               'module' => $module,
@@ -198,18 +214,17 @@ class AdvancedHelpManager extends DefaultPluginManager {
               'popup width' => isset($topic['popup width']) ? $topic['popup width'] : 500,
               'popup height' => isset($topic['popup height']) ? $topic['popup height'] : 500,
               // Require extension.
-              'file' => isset($topic['readme file']) ? $file : $file . '.html',
+              'file' => $file_name,
               // Not in .ini file.
               'path' => $path,
               'line break' => isset($topic['line break']) ? $topic['line break'] : (isset($ini['settings'][$module]['line break']) ? $ini['settings'][$module]['line break'] : FALSE),
               'navigation' => isset($topic['navigation']) ? $topic['navigation'] : (isset($ini['settings'][$module]['navigation']) ? $ini['settings'][$module]['navigation'] : TRUE),
               'css' => isset($topic['css']) ? $topic['css'] : (isset($ini['settings'][$module]['css']) ? $ini['settings'][$module]['css'] : NULL),
-              'readme file' => isset($topic['readme file']) ? $topic['readme file'] : FALSE,
+	      'file name' => $file_name,
             ];
           }
         }
       }
-      // drupal_alter('advanced_help_topic_info', $ini);.
       $this->cacheSet('advanced_help_ini_' . $language, $ini);
     }
     return $ini;
@@ -244,7 +259,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
     ];
 
     foreach ($paths as $path) {
-      if (file_exists("$path/$info[file]")) {
+      if (file_exists($path . '/' . $info['file'])) {
         return ['path' => $path, 'file' => $info['file']];
       }
     }
@@ -258,7 +273,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
   public function getTopicFileName($module, $topic) {
     $info = $this->getTopicFileInfo($module, $topic);
     if ($info) {
-      return "./{$info['path']}/{$info['file']}";
+      return '/' . $info['path'] . '/' . $info['file'];
     }
   }
 

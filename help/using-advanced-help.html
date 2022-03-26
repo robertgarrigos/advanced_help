@@ -7,8 +7,8 @@ modules and themes may use to provide their own help.</p>
 <p>Modules and themes utilizing <strong>Advanced help</strong> should
 create a subdirectory named <code>help</code> inside their own main
 directory. Place the file
-<em>MODULENAME</em>.help.ini (resp. <em>THEMENAME</em>.help.ini) in this subdirectory.
-formatted similar to the following example:</p>
+<em>MODULENAME</em>.help.yml (resp. <em>THEMENAME</em>.help.yml) in
+this subdirectory.  formatted similar to the following example:</p>
 
 <pre>
 [about-php]
@@ -33,10 +33,10 @@ title = PHP syntax
 parent = usage
 </pre>
 
-<p>This file defines five help topics (inside the square brackets), and
-some settings for them.
-See: <a href="&topic:advanced_help/ini-file&">Advanced help .ini file format</a> for
-a list of defined settings.</p>
+<p>This file defines five help topics (inside the square brackets),
+and some settings for them.
+See: <a href="&topic:advanced_help/yml-file&">Advanced help .help.yml
+file format</a> for a list of defined settings.</p>
 
 
 <p>All topics are addressed by the module or theme providing the
@@ -106,36 +106,6 @@ help</strong> did not require the &amp;'s to be wrapped around
 This is currently still supported, but will be removed in a future
 version.  By adding the &amp;'s these tokens are now not limited
 to <code>href=""</code> and <code>src=""</code> parameters.</p>
-
-<h2 id="access-control">Access control</h2>
-
-<p>When this module is installed, users with the
-<code>view advanced help index</code>
-permission can access the advanced help index by going to
-<em>Administer &rarr; Advanced Help</em>
-(<code>admin/advanced_help</code>). Additional permissions
-<code>view advanced help topic</code>  and
-<code>view advanced help popup</code>
-enable users to access the actual help pages and popups.</p>
-
-<p>The help texts are stored as plain .html-files and can, unless
-protected, be accessed by anyone who knows their URL.  To protect
-them, place the following four lines in a file named
-<code>.htaccess</code> in project's <code>help</code> directory:</p>
-
-<pre>
-&lt;Files *\.html&gt;
-Order Allow,Deny
-Deny from all
-&lt;/Files&gt;
-</pre>
-
-<p>It as the responsibility of the site manager to make sure this type
-of protection is in place if the site has help files that merits
-protection from direct access.</p>
-
-<p>See also this tracker in the project's issue queue:  
-<a href="https://www.drupal.org/node/1980936">#1980936 Typing complete path to .html help files in module bypasses user permissions</a>.</p>
 
 <h2 id="search">Search</h2>
 

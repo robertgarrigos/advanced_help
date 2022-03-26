@@ -86,14 +86,19 @@ class AdvancedHelpManager extends DefaultPluginManager {
   }
 
   /**
-   * Return the name of the module.
+   * Return the name of the project.
    *
-   * @param string $module
+   * @param string $project
    *
    * @return string
    */
-  public function getProjectName($module) {
-    return $this->module_handler->getName($module);
+  public function getProjectName($project) {
+    if ($this->module_handler->moduleExists($project)) {
+      return $this->module_handler->getName($project);
+    }
+    else {
+      return $this->theme_handler->getName($project);
+    }
   }
 
   /**

@@ -2,7 +2,7 @@ advanced_help.main:
   path: '/admin/help/ah'
   defaults:
     _controller: '\Drupal\advanced_help\Controller\AdvancedHelpController::main'
-    _title: 'Module help index'
+    _title: 'Index of extensions with advanced help'
   requirements:
     _permission: 'view advanced help index'
 

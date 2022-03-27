@@ -76,11 +76,9 @@ class AdvancedHelpController extends ControllerBase {
     }
 
     return [
-      'help_modules' => [
-        '#theme' => 'item_list',
-        '#items' => $items,
-        '#title' => $this->t('Module help index'),
-      ],
+      '#theme' => 'item_list',
+      '#items' => $items,
+      '#title' => $this->t('Module help index'),
     ];
   }
 

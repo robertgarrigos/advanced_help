@@ -258,7 +258,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
     // // Allow theme override.
     //      path_to_theme() . '/help',
       // Translations.
-      drupal_get_path($path_type, $module) . "/translations/help/$language",
+      \Drupal::service('extension.path.resolver')->getPath($path_type, $module) . "/translations/help/$language",
       // In same directory as .inc file.
       $info['path'],
     ];

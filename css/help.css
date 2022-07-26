@@ -57,3 +57,42 @@
 .help-next {
   float: right;
 }
+
+.help-imgpos-left {
+  display: block;
+  padding: 2px;
+  margin: 0 1.25em 0.5em 0;
+  float: left;
+  border: solid 1px #ccc;
+}
+
+.help-imgpos-right {
+  display: block;
+  padding: 2px;
+  margin: 0 0 0.5em 1.25em;
+  float: right;
+  border: solid 1px #ccc;
+}
+
+.help-imgpos-center {
+  margin: 1em auto 1em auto;
+  padding: 2px;
+  border: solid 1px #ccc;
+}
+
+.help-img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.help-img-caption {
+  text-align: center;
+  background: #f6f6f6;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: Calibri, "Helvetica Neue", Arial, Sans, sans-serif;
+  font-size: 0.9em;
+}
+
+
+

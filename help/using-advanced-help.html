@@ -40,15 +40,9 @@ file format</a> for a list of defined settings.</p>
 
 
 <p>All topics are addressed by the module or theme providing the
-topic, and by the topic id. To produce a themed link to popup
-about a topic, use the a format similar to the following example:</p>
-
-<!-- D6
-<pre>
-$output = theme('advanced_help_topic', 'help_example', 'about-php');
-$output .= '&nbsp;' . t('Click the help icon!');
-</pre>
--->
+topic, and by the topic id. For Drupal 7, one could use the a format
+similar to the following example to produce a themed link to popup
+about a topic:</p>
 
 <!-- D7 -->
 <pre>
@@ -58,6 +52,12 @@ $output = theme('advanced_help_topic', array(
 ));
 $output .= '&nbsp;' . t('Click the help icon!');
 </pre>
+
+<!-- D9 -->
+<p><strong>NOTE:</strong> In Drupal 9, the
+function <code>theme()</code> is deprecated. A valid example for
+Drupal 9 has to be created.</p>
+
 
 <p>This produces the following output:</p>
 
@@ -76,7 +76,12 @@ $output .= '&nbsp;' . t('Click the help icon!');
 <p>This produces a clickable help icon like the one shown below:</p>
 
 <div class="ta-center">
-<img class="help-img-center" alt="clickable icon" src="&path&click_icon.png" width="180" height="90" border="0" />
+<img class="help-img-center" alt="[If you see this, the '&path' token is not expanded.]" src="&path&click_icon.png" width="180" height="90" border="0" />
+</div>
+
+<div class="help-imgpos-center" style="max-width:180px">
+<img class="help-img" alt="pollresult.png" title="Poll result." src="/modules/contrib/advanced_help/help/click_icon.png" width="180" />
+<div class="help-img-caption"  style="max-width: 180px">Question mark help icon</div>
 </div>
 
 <p>Inside your help file, you may link to other help topics using this format:</p>

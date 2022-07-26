@@ -18,9 +18,9 @@ Each `.html`, `.md` and `.txt` file should then be translated in
 place.
 
 When translating a `.html` file, you will find that the
-`&amp;path&amp;` keyword (used for images and links) will lead to the
+`&path&` keyword (used for images and links) will lead to the
 original directory. If you must translate items that are linked, such
-as images containing text, use `&amp;trans_path&amp;` instead, which
+as images containing text, use `&trans_path&` instead, which
 will lead to the translated directory. This will allow you to pick and
 choose which linked items, if any, will be translated.
 

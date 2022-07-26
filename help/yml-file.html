@@ -1,9 +1,10 @@
-<p>The advanced help configuration file is in simple .ini file format.
-It has an optional section for global settings that might be inherited
-for each help file, followed by sections for each help file.</p>
+<p>The advanced help configuration file has name ending
+with <code>.help.yml</code>.  It has an optional section for global
+settings that might be inherited for each help file, followed by
+sections for each help file.</p>
 
-<p>Global settings may be put into a section named <code>[advanced help
-settings]</code>.  This means that this name is reserved and it cannot
+<p>Global settings may be put into a section named <code>advanced help
+settings</code>.  This means that this name is reserved and it cannot
 be a help file in any module or theme. The following settings may be
 set in this section, with the default value (if any) in brackets.</p>
 
@@ -93,25 +94,21 @@ will override any .css file added by the global settings.</dd>
 <dd>The height in pixels of the popup window.</dd>
 </dl>
 
-<p>For example, here is a version of the <code>advanced_help.help.ini</code> file:</p>
+<p>For example, here is a version of the <code>advanced_help.help.yml</code> file:</p>
 
 <pre>
-[readme]
-title = README
-weight = -11
-
-[using-advanced-help]
-title = Using advanced help
-weight = -10
-
-[translation]
-title = Translating advanced help
-
-[ini-file]
-title = Help .ini file format
-line break = FALSE
-
-[why-advanced-help]
-title = Why advanced help?
-line break = TRUE
+README:
+  title: 'README'
+  weight: -11
+using-advanced-help:
+  title: 'Using advanced help'
+  weight: -10
+translation:
+    title: 'Translating advanced help'
+yml-file:
+    title: 'Advanced help .help.yml file format'
+    line break: false
+why-advanced-help:
+    title: 'Why advanced help?'
+    line break: true
 </pre>

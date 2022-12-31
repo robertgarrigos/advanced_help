@@ -22,7 +22,7 @@
     "source": "https://cgit.drupalcode.org/advanced_help"
   },
   "require": {
-    "drupal/core": "^8.8 || ^9",
-    "michelf/php-markdown": "^1.7"
+    "drupal/core": "^8.8 || ^9 || ^10",
+    "michelf/php-markdown": "^1.9"
   }
 }

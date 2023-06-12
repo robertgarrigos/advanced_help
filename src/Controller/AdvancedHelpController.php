@@ -78,7 +78,7 @@ class AdvancedHelpController extends ControllerBase {
     return [
       '#theme' => 'item_list',
       '#items' => $items,
-      '#title' => $this->t('Module help index'),
+      '#title' => $this->t('Help topics available'),
     ];
   }
 
@@ -301,7 +301,6 @@ class AdvancedHelpController extends ControllerBase {
       if ('md' == $ext) {
         $build['#markup'] = '<div class="advanced-help-topic">' . Xss::filterAdmin(MarkdownExtra::defaultTransform($build['#markup'])) . '</div>';
       }
-      return $build;
 
       // Change 'topic:' to the URL for another help topic.
       preg_match('/&topic:([^"]+)&/', $build['#markup'], $matches);

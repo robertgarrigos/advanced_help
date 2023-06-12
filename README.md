@@ -1,16 +1,5 @@
 # Advanced Help
 
-## Table of contents
-
-- Introduction
-- Requirements
-- Installation
-- Configuration
-- Maintainers
-
-
-## Introduction
-
 The Advanced Help module allows module developers to store their help outside
 the module system, in pure .html or .md (MarkDown) files. It provides a
 framework that allows module and theme developers to integrate help texts in a
@@ -25,16 +14,33 @@ administrative interface.
   [issue queue](https://www.drupal.org/project/issues/advanced_help).
 
 
+## Table of contents
+
+- Requirements
+- Installation
+- Configuration
+- Maintainers
+
+
 ## Requirements
 
-The project's requirements can be found in the project's `composer.json`.
+This projects requires the following core module:
+
+- [Help](https://www.drupal.org/docs/8/core/modules/help)
+
+This projects requires the following third party library:
+
+- [PHP Markdown](https://github.com/michelf/php-markdown)
+
+The PHP Markdown library is installed automatically by
+*composer*. Please see the project's `composer.json` for the exact
+requirements.
 
 
 ## Installation
 
-You must use composer to install the 8.x-1.x branch of the
-project. The exact command line is displayed on the project page,
-along with the release.
+You must use *composer* to install the project. The exact command line
+is displayed on the project page, along with the release.
 
 
 ## Configuration

@@ -226,6 +226,9 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
         }
 
         // Update index, using search index "type" equal to the plugin ID.
+	// Search does no work, so we have a bogus return here before we crash.
+	return;
+
         $this->searchIndex->index($this->getPluginId(), $info['sid'], $language, file_get_contents($file));
         $count++;
         if ($count >= $limit) {
@@ -234,6 +237,7 @@ class AdvancedHelpSearch extends SearchPluginBase implements AccessibleInterface
           \Drupal::state()->set($this->getPluginId() . '.last_cron', $last);
           return;
         }
+
       }
     }
     \Drupal::state()->set($this->getPluginId() . '.last_cron', ['time' => time()]);

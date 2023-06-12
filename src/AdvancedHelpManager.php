@@ -145,11 +145,17 @@ class AdvancedHelpManager extends DefaultPluginManager {
         $info = [];
 
         // Full Advanced Help help text
+        $show_readme = false; // Default
         if (file_exists($module_path . '/help/' . $module . '.help.yml')) {
           $path = $module_path . '/help';
           $info = Yaml::decode(file_get_contents($module_path . '/help/' . $module . '.help.yml'));
+	  if (isset($info['advanced help settings'])) {
+            if (isset($info['advanced help settings']['show readme'])) {
+	      $show_readme = $info['advanced help settings']['show readme'];
+	    }
+	  }
         }
-        elseif (!file_exists($module_path . '/help')) {
+        if (!file_exists($module_path . '/help') || $show_readme) {
           // Look for one or more README files.
           $files = $this->fileSystem->scanDirectory('./' . $module_path,
             '/^(readme).*\.(txt|md)$/i', ['recurse' => FALSE]);
@@ -159,6 +165,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
               'line break' => TRUE,
               'file' => $fileinfo->filename,
               'title' => $fileinfo->name,
+              'weight' => -99,
             ];
 	    // $info['path'] = $path;
           }
@@ -191,7 +198,9 @@ class AdvancedHelpManager extends DefaultPluginManager {
             // Each topic should have a name, a title, a path and a filename.
             $file = !empty($topic['file']) ? $topic['file'] : $name;
 
-            $fname = $path . '/' . $file;
+            $hdir = empty($topic['file']) ? '/help/' : '/';
+
+            $fname = $path . $hdir . $file;
 
             if (file_exists($fname)) {
               $file_name = $file;
@@ -221,7 +230,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
               // Require extension.
               'file' => $file_name,
               // Not in .ini file.
-              'path' => $path,
+              'path' => $path . $hdir,
               'line break' => isset($topic['line break']) ? $topic['line break'] : (isset($ini['settings'][$module]['line break']) ? $ini['settings'][$module]['line break'] : FALSE),
               'navigation' => isset($topic['navigation']) ? $topic['navigation'] : (isset($ini['settings'][$module]['navigation']) ? $ini['settings'][$module]['navigation'] : TRUE),
               'css' => isset($topic['css']) ? $topic['css'] : (isset($ini['settings'][$module]['css']) ? $ini['settings'][$module]['css'] : NULL),
@@ -229,6 +238,7 @@ class AdvancedHelpManager extends DefaultPluginManager {
             ];
           }
         }
+
       }
       $this->cacheSet('advanced_help_ini_' . $language, $ini);
     }

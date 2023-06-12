@@ -2,3 +2,5 @@ name: Advanced Help
 type: module
 description: 'Provide extended help and documentation.'
 core_version_requirement: ^8.8 || ^9 || ^10
+dependencies:
+  - drupal:help
